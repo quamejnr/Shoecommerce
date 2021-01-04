@@ -1,0 +1,27 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row">
+		{% for product in object_list %}
+			<div class="col-lg-4">
+				<img class="thumbnail" style="height: 300px; width: 350px" src="{{product.image.url}}" alt="">
+				<div class="box-element product">
+					<h6><strong>{{product.name}}</strong></h6>
+					<hr>
+
+					<a class="btn btn-outline-success" href="{{product.get_absolute_url}}">View</a>
+					<h4 style="display: inline-block; float: right">
+						{% if product.discount_price %}
+							<del><strong>GH<span>&#8373</span>{{product.price|floatformat:2}}</strong></del>
+							<strong>GH<span>&#8373</span>{{product.discount_price|floatformat:2}}</strong>
+						{% else %}
+							<strong>GH<span>&#8373</span>{{product.price|floatformat:2}}</strong>
+						{% endif %}
+					</h4>
+
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock content %}

@@ -1,0 +1,24 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block content %}
+	<div class="container" style="text-align: center;">
+		<img style="height: 350px; width: 400px;" src="{{object.image.url}}" alt="">
+		<h2>{{object.name}}</h2>
+		<div class="justify-content-center" style="display:flex;">
+		{% if object.discount_price %}
+			<h2>GH<span>&#8373</span>{{object.discount_price|floatformat:2}}</h2>
+		{% else %}
+			<h2>GH<span>&#8373</span>{{object.price|floatformat:2}}</h2>
+		{% endif %}
+		</div>
+		<br>
+			<button data-product="{{object.id}}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">
+				Add to Cart
+			</button>
+
+			<button data-product="{{object.id}}" data-action="remove" class="btn btn-outline-danger add-btn update-cart">
+				Remove from Cart
+			</button>
+
+	</div>
+{% endblock content %}

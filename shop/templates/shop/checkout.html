@@ -1,0 +1,105 @@
+{% extends 'shop/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+     <div class="row">
+		<div class="col-lg-6">
+			<div class="box-element" id="form-wrapper">
+
+				<form id="form" method="POST" enctype="multipart/form-data">
+
+<!--					<div id="user-info">-->
+<!--						<div class="form-field">-->
+<!--							<input required class="form-control" type="text" name="name" placeholder="Name..">-->
+<!--						</div>-->
+<!--						<div class="form-field">-->
+<!--							<input required class="form-control" type="email" name="email" placeholder="Email..">-->
+<!--						</div>-->
+<!--					</div>-->
+					{% if order.shipping %}
+						<div id="shipping-info">
+						<hr>
+						<p>Shipping Information:</p>
+						<hr>
+						<div class="form-field">
+							{% csrf_token %}
+							{{form|crispy}}
+						</div>
+					</div>
+					{% endif %}
+
+					<hr>
+					<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
+				</form>
+
+			</div>
+
+			<br>
+			<div class="box-element hidden" id="payment-info">
+				<small>Paypal Options</small>
+				<button id="make-payment">Make payment</button>
+			</div>
+		</div>
+
+		<div class="col-lg-6">
+			<div class="box-element">
+				<a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+				<hr>
+				<h3>Order Summary</h3>
+				<hr>
+				{% for item in items %}
+					<div class="cart-row">
+						<div style="flex:2"><img class="row-image" src="{{item.product.image.url}}"></div>
+						<div style="flex:2"><p>{{item.product.name}}</p></div>
+						{% if item.product.discount_price %}
+							<div style="flex:2"><p>GH<span>&#8373</span>{{item.product.discount_price|floatformat}}</p></div>
+						{% else %}
+							<div style="flex:2"><p>GH<span>&#8373</span>{{item.product.price|floatformat:2}}</p></div>
+						{% endif %}
+						<div style="flex:1"><p>{{item.quantity}}</p></div>
+					</div>
+				{% endfor %}
+				<h5>Items: {{order.cart_items}}</h5>
+				<h5>Total: Gh<span>&#8373</span>{{order.cart_total}}</h5>
+			</div>
+		</div>
+	</div>
+
+<!--	<script type="text/javascript">-->
+
+<!--		if(user != 'AnonymousUser'){-->
+<!--			//Hide user info when user is logged in-->
+<!--			document.getElementById('user-info').innerHTML = ''-->
+<!--		}-->
+
+<!--		var shipping = '{{order.shipping}}'-->
+
+<!--		if(user != 'AnonymousUser' && shipping == 'False'){-->
+<!--			//Hide continue button and show payment button-->
+<!--			document.getElementById('form-wrapper').classList.add('hidden')-->
+<!--			document.getElementById('payment-info').classList.remove('hidden')-->
+<!--		}-->
+
+
+
+<!--		var form = document.getElementById('form')-->
+
+<!--		form.addEventListener("submit", function(e){-->
+<!--			e.preventDefault()-->
+<!--			console.log("Form submitted..")-->
+
+<!--			document.getElementById('form-button').classList.add('hidden')-->
+<!--			document.getElementById('payment-info').classList.remove('hidden')-->
+<!--		})-->
+
+
+<!--		function submitFormData(){-->
+<!--			console.log('Payment button clicked')-->
+<!--		}-->
+
+<!--		document.getElementById("make-payment").addEventListener("click", function(e){-->
+<!--			submitFormData()-->
+<!--		})-->
+
+<!--	</script>-->
+
+{% endblock content %}
