@@ -22,12 +22,6 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('product', kwargs={'slug': self.slug})
 
-    # def add_item_url(self):
-    #     return reverse('add-item', kwargs={'slug': self.slug})
-    #
-    # def remove_item_url(self):
-    #     return reverse('remove-item', kwargs={'slug': self.slug})
-
     def save(self, *args, **kwargs):
         # resizing images before saving
         super().save(*args, **kwargs)
@@ -49,11 +43,29 @@ class Customer(models.Model):
         return self.name
 
 
+class ShippingAddress(models.Model):
+
+    PAYMENT_OPTIONS = (
+        ('S', 'Stripe'),
+        ('P', 'Paypal'),
+    )
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
+    country = CountryField(blank_label='select country', null=True, multiple=False)
+    street_address = models.CharField(max_length=200, null=False)
+    city = models.CharField(max_length=200, null=False)
+    payment_option = models.CharField(choices=PAYMENT_OPTIONS, null=True, blank=True, max_length=2)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'({self.customer}, {self.country}, {self.street_address}'
+
+
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False, null=True, blank=False)
     transaction_id = models.CharField(max_length=200, null=True)
+    shipping_address = models.ForeignKey(ShippingAddress, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.transaction_id
@@ -96,14 +108,5 @@ class OrderItem(models.Model):
         return total
 
 
-class ShippingAddress(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
-    country = CountryField(blank_label='select country', null=True, multiple=False)
-    street_address = models.CharField(max_length=200, null=False)
-    city = models.CharField(max_length=200, null=False)
-    date_added = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f'Order = {self.order} ({self.customer}, {self.country}, {self.street_address}'
 

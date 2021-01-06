@@ -6,4 +6,4 @@ class ShippingAddressForm(forms.ModelForm):
 
     class Meta:
         model = ShippingAddress
-        fields = ['country', 'city', 'street_address']
+        fields = ['country', 'city', 'street_address', 'payment_option']

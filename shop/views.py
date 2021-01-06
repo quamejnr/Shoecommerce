@@ -40,7 +40,7 @@ class CartView(ListView):
 
     def get_queryset(self):
         try:
-            # Returns items in cart of a registered customer
+            # Returning items in cart of a registered customer
             customer = self.request.user.customer
             order, created = Order.objects.get_or_create(customer=customer, complete=False)
             cart_items = order.orderitem_set.all()
@@ -115,12 +115,13 @@ class CheckoutView(View, LoginRequiredMixin):
                     city = form.cleaned_data.get('city')
                     shipping_address = ShippingAddress(
                         customer=self.request.user.customer,
-                        order=order,
                         country=country,
                         street_address=street_address,
                         city=city,
                     )
                     shipping_address.save()
+                    order.shipping_address = shipping_address
+                    order.save()
                     print(form.cleaned_data)
                     form.save()
                     # TODO: Add redirect to the selected payment option
@@ -129,6 +130,12 @@ class CheckoutView(View, LoginRequiredMixin):
             except ValueError:
                 messages.warning(self.request, 'You do not have an active order')
                 return redirect('checkout')
+
+
+class PaymentView(View):
+
+    def get(self, *args, **kwargs):
+        return render(self.request, 'shop/payment.html')
 
 
 def update_item(request):
