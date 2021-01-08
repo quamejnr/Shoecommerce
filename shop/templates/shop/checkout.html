@@ -4,32 +4,59 @@
      <div class="row">
 		<div class="col-lg-6">
 			<div class="box-element" id="form-wrapper">
-
-				<form id="form" method="POST" enctype="multipart/form-data">
-
-					{% if order.shipping %}
-						<div id="shipping-info">
-						<hr>
-						<p>Shipping Information:</p>
-						<hr>
-						<div class="form-field">
-							{% csrf_token %}
-							{{form|crispy}}
+				<form id="form" class="card-body" method="POST" enctype="multipart/form-data">
+					{%csrf_token%}
+					  <div class="form-group">
+						<label for="address">Street Address</label>
+						  {{form.street_address}}
+	<!--					<input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">-->
+					  </div>
+					  <div class="form-group">
+						<label for="address2">Apartment Address</label>
+	<!--					<input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">-->
+						  {{form.apartment_address}}
+					  </div>
+					  <div class="form-row">
+						<div class="form-group col-md-6">
+						  <label for="city">City</label>
+							{{form.city}}
+	<!--					  <input type="text" class="form-control" id="inputCity">-->
 						</div>
-					</div>
-					{% endif %}
+						<div class="form-group row">
+							<div class="col-lg-4 col-md-12 mb-4 ml-1">
+								<label for="country">Country</label>
+								{{form.country}}
+							</div>
+						</div>
+						<div>
+							<input type="checkbox" class="custom-control-input" name="same_billing_address" id="same-address">
+							{{form.same_billing_address}}
+							<label for="same-address">Shipping Address is same as my billing Address</label>
+						</div>
+						<div>
+							<input type="checkbox" class="custom-control-input" name="save_info" id="save-info">
+							{{form.save_info}}
+							<label for="save-info">Save this information</label>
+						</div>
+					  </div>
+					  <div class="d-block my-3">
+						  {% for value, name in form.fields.payment_option.choices %}
+							<div class="custom-control custom-radio form-group">
+								<input type="radio" class="custom-control-input" id="{{name}}" name="payment_option" value="{{value}}">
+								<label class="custom-control-label" for={{name}}>{{name}}</label>
+							</div>
+						  {% endfor %}
+					  </div>
+
+					  <button type="submit" class="btn btn-primary">Continue to Checkout</button>
+				</form>
 
 					<hr>
-					<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
-				</form>
+<!--					<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">-->
 
 			</div>
 
 			<br>
-			<div class="box-element hidden" id="payment-info">
-				<small>Paypal Options</small>
-				<button id="make-payment">Make payment</button>
-			</div>
 		</div>
 
 		<div class="col-lg-6">

@@ -2,12 +2,16 @@ from django.shortcuts import render, get_object_or_404
 from .models import *
 from django.views.generic import ListView, DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
 from django.http import JsonResponse
 import json
 from django.contrib import messages
 from django.shortcuts import redirect
 from shop.forms import ShippingAddressForm
+import stripe
 from django.contrib.auth.decorators import login_required
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class StoreListView(ListView):
@@ -106,24 +110,27 @@ class CheckoutView(View, LoginRequiredMixin):
         if self.request.method == 'POST':
             # Creates an instance of form with POST request
             form = ShippingAddressForm(self.request.POST)
+            print(self.request.POST)
             # Form is validated and saved
             try:
                 order = Order.objects.get(customer=self.request.user.customer, complete=False)
                 if form.is_valid():
-                    country = form.cleaned_data.get('country')
                     street_address = form.cleaned_data.get('street_address')
+                    apartment_address = form.cleaned_data.get('apartment_address')
                     city = form.cleaned_data.get('city')
-                    shipping_address = ShippingAddress(
+                    country = form.cleaned_data.get('country')
+                    # payment_option = form.cleaned_data('payment_option')
+                    billing_address = BillingAddress(
                         customer=self.request.user.customer,
                         country=country,
                         street_address=street_address,
                         city=city,
+                        apartment_address=apartment_address,
                     )
-                    shipping_address.save()
-                    order.shipping_address = shipping_address
+                    billing_address.save()
+                    order.billing_address = billing_address
                     order.save()
                     print(form.cleaned_data)
-                    form.save()
                     # TODO: Add redirect to the selected payment option
                     messages.success(self.request, "Form submitted")
                     return redirect('checkout')

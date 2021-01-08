@@ -43,17 +43,12 @@ class Customer(models.Model):
         return self.name
 
 
-class ShippingAddress(models.Model):
-
-    PAYMENT_OPTIONS = (
-        ('S', 'Stripe'),
-        ('P', 'Paypal'),
-    )
+class BillingAddress(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
     country = CountryField(blank_label='select country', null=True, multiple=False)
     street_address = models.CharField(max_length=200, null=False)
+    apartment_address = models.CharField(max_length=200, null=False, blank=True)
     city = models.CharField(max_length=200, null=False)
-    payment_option = models.CharField(choices=PAYMENT_OPTIONS, null=True, blank=True, max_length=2)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -65,7 +60,7 @@ class Order(models.Model):
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False, null=True, blank=False)
     transaction_id = models.CharField(max_length=200, null=True)
-    shipping_address = models.ForeignKey(ShippingAddress, on_delete=models.SET_NULL, null=True, blank=True)
+    billing_address = models.ForeignKey(BillingAddress, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.transaction_id

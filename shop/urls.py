@@ -9,7 +9,7 @@ urlpatterns = [
     path('cart/', CartView.as_view(), name='cart'),
     path('update_item/', update_item, name='update-item'),
     path('checkout/', CheckoutView.as_view(), name='checkout'),
-    path('payment/', PaymentView.as_view(), name='payment'),
+    path('payment/<payment_option>', PaymentView.as_view(), name='payment'),
 
 
 
