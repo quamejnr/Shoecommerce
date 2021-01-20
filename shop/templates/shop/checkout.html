@@ -43,12 +43,12 @@
 						  {% for value, name in form.fields.payment_option.choices %}
 							<div class="custom-control custom-radio form-group">
 								<input type="radio" class="custom-control-input" id="{{name}}" name="payment_option" value="{{value}}">
-								<label class="custom-control-label" for={{name}}>{{name}}</label>
+								<label class="custom-control-label" for={{name}}>{{name|title}}</label>
 							</div>
 						  {% endfor %}
 					  </div>
 
-					  <button type="submit" class="btn btn-primary">Continue to Checkout</button>
+					  <button type="submit" class="btn btn-primary">Make Payment</button>
 				</form>
 
 					<hr>

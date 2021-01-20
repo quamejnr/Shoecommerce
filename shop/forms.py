@@ -3,8 +3,8 @@ from django_countries.fields import CountryField
 
 
 PAYMENT_CHOICES = (
-    ('S', 'Stripe'),
-    ('P', 'Paypal'),
+    ('S', 'stripe'),
+    ('P', 'paypal'),
 
 )
 

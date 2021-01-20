@@ -10,6 +10,7 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     brand = models.CharField(max_length=100, null=True, blank=True)
     price = models.FloatField()
+    quantity = models.IntegerField(default=1, null=True)
     discount_price = models.FloatField(null=True, blank=True)
     digital = models.BooleanField(default=False)
     image = models.ImageField(null=True)
@@ -51,8 +52,21 @@ class BillingAddress(models.Model):
     city = models.CharField(max_length=200, null=False)
     date_added = models.DateTimeField(auto_now_add=True)
 
+    def address(self):
+        return f'{self.country}, {self.city}, {self.street_address}'
+
     def __str__(self):
-        return f'({self.customer}, {self.country}, {self.street_address}'
+        return self.address()
+
+
+class Payment(models.Model):
+    charge_id = models.CharField(max_length=50)
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
+    amount = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.customer.name} - Ghc{self.amount}  ({self.charge_id})'
 
 
 class Order(models.Model):
@@ -61,9 +75,12 @@ class Order(models.Model):
     complete = models.BooleanField(default=False, null=True, blank=False)
     transaction_id = models.CharField(max_length=200, null=True)
     billing_address = models.ForeignKey(BillingAddress, on_delete=models.SET_NULL, null=True, blank=True)
+    payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return self.transaction_id
+        if self.transaction_id:
+            return f'{self.customer.name} - {self.transaction_id}'
+        return self.customer.name
 
     def shipping(self):
         # Returns a boolean as to whether a product is digital or not
@@ -92,7 +109,7 @@ class OrderItem(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Order:{self.order} - {self.product.name} ({self.quantity})'
+        return self.product.name
 
     def total(self):
         # Returns the total price of the quantity of products in cart
@@ -101,7 +118,6 @@ class OrderItem(models.Model):
         except TypeError:
             total = self.product.price * self.quantity
         return total
-
 
 
 

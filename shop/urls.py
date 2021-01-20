@@ -12,5 +12,4 @@ urlpatterns = [
     path('payment/<payment_option>', PaymentView.as_view(), name='payment'),
 
 
-
 ]

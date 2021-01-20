@@ -104,8 +104,31 @@
 {% block content %}
      <div class="row">
 		<div class="col-lg-12">
+			<div class="box-element" id="form-wrapper">
+				<div class="wrapper">
+					<script src="https://js.stripe.com/v3/"></script>
+
+					<form method="POST" id="stripe-form">
+						{% csrf_token %}
+						<div class="stripe-form-row">
+						  <label for="card-element" id="stripeBtnLabel">
+							Credit or debit card
+						  </label>
+						  <div id="card-element" class="StripeElement StripeElement--empty"><div class="__PrivateStripeElement" style="margin: 0px !important; padding: 0px !important; border: none !important; display: block !important; background: transparent !important; position: relative !important; opacity: 1 !important;"><iframe frameborder="0" allowtransparency="true" scrolling="no" name="__privateStripeFrame7065" allowpaymentrequest="true" src="https://js.stripe.com/v3/elements-inner-card-33a1b7f17124871c0a3d899519e58507.html#wait=false&amp;style[base][color]=%2332325d&amp;style[base][fontFamily]=%22Helvetica+Neue%22%2C+Helvetica%2C+sans-serif&amp;style[base][fontSmoothing]=antialiased&amp;style[base][fontSize]=16px&amp;style[base][::placeholder][color]=%23aab7c4&amp;style[invalid][color]=%23fa755a&amp;style[invalid][iconColor]=%23fa755a&amp;rtl=false&amp;componentName=card&amp;keyMode=test&amp;apiKey=pk_test_TYooMQauvdEDq54NiTphI7jx&amp;referrer=https%3A%2F%2Fstripe.com%2Fdocs%2Fstripe-js&amp;controllerId=__privateStripeController7061" title="Secure card payment input frame" style="border: none !important; margin: 0px !important; padding: 0px !important; width: 1px !important; min-width: 100% !important; overflow: hidden !important; display: block !important; user-select: none !important; will-change: transform !important; height: 19.2px;"></iframe><input class="__PrivateStripeElement-input" aria-hidden="true" aria-label=" " autocomplete="false" maxlength="1" style="border: none !important; display: block !important; position: absolute !important; height: 1px !important; top: -1px !important; left: 0px !important; padding: 0px !important; margin: 0px !important; width: 100% !important; opacity: 0 !important; background: transparent !important; pointer-events: none !important; font-size: 16px !important;"></div></div>
+
+						  <!-- Used to display form errors. -->
+						  <div id="card-errors" role="alert"></div>
+						</div>
+
+						<button id="stripeBtn">Submit Payment</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-12">
 			<div class="box-element">
-				<a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+				<a  class="btn btn-outline-dark" href="{% url 'checkout' %}">&#x2190; Back to Checkout</a>
 				<hr>
 				<h3>Order Summary</h3>
 				<hr>
@@ -125,28 +148,6 @@
 				<h5>Total: Gh<span>&#8373</span>{{order.cart_total}}</h5>
 			</div>
 		</div>
-		<div class="col-lg-12">
-			<div class="box-element" id="form-wrapper">
-				<div class="wrapper">
-					<script src="https://js.stripe.com/v3/"></script>
-
-					<form action="/charge" method="post" id="stripe-form">
-						<div class="stripe-form-row">
-						  <label for="card-element" id="stripeBtnLabel">
-							Credit or debit card
-						  </label>
-						  <div id="card-element" class="StripeElement StripeElement--empty"><div class="__PrivateStripeElement" style="margin: 0px !important; padding: 0px !important; border: none !important; display: block !important; background: transparent !important; position: relative !important; opacity: 1 !important;"><iframe frameborder="0" allowtransparency="true" scrolling="no" name="__privateStripeFrame7065" allowpaymentrequest="true" src="https://js.stripe.com/v3/elements-inner-card-33a1b7f17124871c0a3d899519e58507.html#wait=false&amp;style[base][color]=%2332325d&amp;style[base][fontFamily]=%22Helvetica+Neue%22%2C+Helvetica%2C+sans-serif&amp;style[base][fontSmoothing]=antialiased&amp;style[base][fontSize]=16px&amp;style[base][::placeholder][color]=%23aab7c4&amp;style[invalid][color]=%23fa755a&amp;style[invalid][iconColor]=%23fa755a&amp;rtl=false&amp;componentName=card&amp;keyMode=test&amp;apiKey=pk_test_TYooMQauvdEDq54NiTphI7jx&amp;referrer=https%3A%2F%2Fstripe.com%2Fdocs%2Fstripe-js&amp;controllerId=__privateStripeController7061" title="Secure card payment input frame" style="border: none !important; margin: 0px !important; padding: 0px !important; width: 1px !important; min-width: 100% !important; overflow: hidden !important; display: block !important; user-select: none !important; will-change: transform !important; height: 19.2px;"></iframe><input class="__PrivateStripeElement-input" aria-hidden="true" aria-label=" " autocomplete="false" maxlength="1" style="border: none !important; display: block !important; position: absolute !important; height: 1px !important; top: -1px !important; left: 0px !important; padding: 0px !important; margin: 0px !important; width: 100% !important; opacity: 0 !important; background: transparent !important; pointer-events: none !important; font-size: 16px !important;"></div></div>
-
-						  <!-- Used to display form errors. -->
-						  <div id="card-errors" role="alert"></div>
-						</div>
-
-						<button id="stripeBtn">Submit Payment</button>
-					</form>
-				</div>
-			</div>
-		</div>
-
 	</div>
 
 <script type="text/javascript" nonce="">  // Create a Stripe client.
@@ -190,7 +191,7 @@
   });
 
   // Handle form submission.
-  var form = document.getElementById('payment-form');
+  var form = document.getElementById('stripe-form');
   form.addEventListener('submit', function(event) {
     event.preventDefault();
 
@@ -209,7 +210,7 @@
   // Submit the form with the token ID.
   function stripeTokenHandler(token) {
     // Insert the token ID into the form so it gets submitted to the server
-    var form = document.getElementById('payment-form');
+    var form = document.getElementById('stripe-form');
     var hiddenInput = document.createElement('input');
     hiddenInput.setAttribute('type', 'hidden');
     hiddenInput.setAttribute('name', 'stripeToken');
@@ -220,15 +221,6 @@
     form.submit();
   }
 
-  var successElement = document.getElementById('stripe-token-handler');
-  document.querySelector('.wrapper').addEventListener('click', function() {
-    successElement.className = 'is-hidden';
-  });
 
-  // Not in demo.
-  function stripeTokenHandler(token) {
-    successElement.className = '';
-    successElement.querySelector('.token').textContent = token.id;
-  }
 </script>
 {% endblock content %}

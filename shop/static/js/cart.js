@@ -8,7 +8,6 @@ for (i = 0; i < updateBtns.length; i++) {
         console.log('User:', user)
 
         if (user === 'AnonymousUser'){
-            console.log('Not logged in')
         } else {
             UpdateItems(productId, action)
         }
@@ -16,7 +15,6 @@ for (i = 0; i < updateBtns.length; i++) {
 }
 
 function UpdateItems(productId, action) {
-    console.log('User is logged in, sending data...')
 
     var url = '/update_item/'
 
@@ -34,7 +32,6 @@ function UpdateItems(productId, action) {
     })
 
      .then((data) =>{
-        console.log('data:', data)
         location.reload()
     })
 }
