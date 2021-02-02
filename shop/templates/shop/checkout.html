@@ -4,6 +4,7 @@
      <div class="row">
 		<div class="col-lg-6">
 			<div class="box-element" id="form-wrapper">
+				<h3>Shipping Address</h3>
 				<form id="form" class="card-body" method="POST" enctype="multipart/form-data">
 					{%csrf_token%}
 					  <div class="form-group">
@@ -70,15 +71,41 @@
 						<div style="flex:2"><img class="row-image" src="{{item.product.image.url}}"></div>
 						<div style="flex:2"><p>{{item.product.name}}</p></div>
 						{% if item.product.discount_price %}
-							<div style="flex:2"><p>GH<span>&#8373</span>{{item.product.discount_price|floatformat}}</p></div>
+							<div style="flex:2"><p>GH<span>&#8373</span>{{item.product.discount_price|floatformat:2}}</p></div>
 						{% else %}
 							<div style="flex:2"><p>GH<span>&#8373</span>{{item.product.price|floatformat:2}}</p></div>
 						{% endif %}
 						<div style="flex:1"><p>{{item.quantity}}</p></div>
 					</div>
 				{% endfor %}
-				<h5>Items: {{order.cart_items}}</h5>
-				<h5>Total: Gh<span>&#8373</span>{{order.cart_total}}</h5>
+				<div class="d-flex justify-content-between">
+					<div>
+						<h5>Items: {{order.cart_items}}</h5>
+						<h5>Total: Gh<span>&#8373</span>{{order.cart_total|floatformat:2}}</h5>
+					</div>
+					{% if order.coupon %}
+						<div class="mr-4" style="color: green;">
+							<h6 style="color: green;">Promo Code: {{order.coupon.code}}</h6>
+							<h6 style="color: green;">Promo Amount: -Gh<span>&#8373</span>{{order.coupon.amount|floatformat:2}}</h6>
+						</div>
+					{% endif %}
+
+				</div>
+
+				<hr>
+				<div>
+					<h3>Coupon</h3>
+					<form class="form-group row" method="POST" action="{% url 'add_coupon' %}">
+						{% csrf_token %}
+						<div class="col-lg-4 col-md-12 mb-4 ml-1 d-flex">
+							{{c_form.code}}
+							<br>
+							<div>
+								<button type="submit" class="btn btn-primary">Redeem</button>
+							</div>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>

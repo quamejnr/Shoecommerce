@@ -10,7 +10,7 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     brand = models.CharField(max_length=100, null=True, blank=True)
     price = models.FloatField()
-    quantity = models.IntegerField(default=1, null=True)
+    quantity = models.IntegerField(default=1)
     discount_price = models.FloatField(null=True, blank=True)
     digital = models.BooleanField(default=False)
     image = models.ImageField(null=True)
@@ -51,12 +51,14 @@ class BillingAddress(models.Model):
     apartment_address = models.CharField(max_length=200, null=False, blank=True)
     city = models.CharField(max_length=200, null=False)
     date_added = models.DateTimeField(auto_now_add=True)
+    payment_option = models.CharField(max_length=10, null=True, blank=True)
 
+    @property
     def address(self):
         return f'{self.country}, {self.city}, {self.street_address}'
 
     def __str__(self):
-        return self.address()
+        return self.address
 
 
 class Payment(models.Model):
@@ -66,7 +68,15 @@ class Payment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.customer.name} - Ghc{self.amount}  ({self.charge_id})'
+        return f'Ghc{self.amount:.2f}'
+
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=20)
+    amount = models.FloatField()
+
+    def __str__(self):
+        return self.code
 
 
 class Order(models.Model):
@@ -76,6 +86,20 @@ class Order(models.Model):
     transaction_id = models.CharField(max_length=200, null=True)
     billing_address = models.ForeignKey(BillingAddress, on_delete=models.SET_NULL, null=True, blank=True)
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True, blank=True)
+    coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
+    order_sent = models.BooleanField(default=False, null=True, blank=False)
+    order_received = models.BooleanField(default=False, null=True, blank=False)
+    refund_requested = models.BooleanField(default=False, null=True, blank=False)
+    refund_granted = models.BooleanField(default=False, null=True, blank=False)
+
+    """
+    1. Item added to cart
+    2. Adding a billing address
+    3. Payment
+    4. Delivery
+    5. Received
+    6. Refunds
+    """
 
     def __str__(self):
         if self.transaction_id:
@@ -93,8 +117,15 @@ class Order(models.Model):
 
     def cart_total(self):
         # Returns the total amount of products in cart.
-        total = sum([item.total() for item in self.orderitem_set.all()])
-        return total
+        try:
+            total = sum([item.total() for item in self.orderitem_set.all()])
+            total -= self.coupon.amount
+            if total < 0:
+                return 0
+            return total
+        except AttributeError:
+            total = sum([item.total() for item in self.orderitem_set.all()])
+            return total
 
     def cart_items(self):
         # Returns the total quantity of products in cart.
@@ -120,4 +151,11 @@ class OrderItem(models.Model):
         return total
 
 
+class Refund(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
+    message = models.TextField()
+    email = models.EmailField()
+    refund_accepted = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"{self.id}"

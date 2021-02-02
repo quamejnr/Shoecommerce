@@ -25,3 +25,16 @@ class ShippingAddressForm(forms.Form):
     same_billing_address = forms.BooleanField(widget=forms.CheckboxInput, required=False)
     save_info = forms.BooleanField(widget=forms.CheckboxInput, required=False)
     payment_option = forms.ChoiceField(widget=forms.RadioSelect, choices=PAYMENT_CHOICES)
+
+
+class CouponForm(forms.Form):
+    code = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder': 'Promo code'
+    }))
+
+
+class RefundForm(forms.Form):
+    order_id = forms.CharField()
+    message = forms.CharField(widget=forms.Textarea)
+    email = forms.EmailField()
+

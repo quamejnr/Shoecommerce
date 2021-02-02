@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product, Order, OrderItem, BillingAddress, Payment
+from .models import Product, Order, OrderItem, BillingAddress, Payment, Coupon, Refund
 from django.views.generic import ListView, DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.contrib import messages
 from django.shortcuts import redirect
-from shop.forms import ShippingAddressForm
+from shop.forms import ShippingAddressForm, CouponForm, RefundForm
 import json
 import datetime
 import stripe
@@ -39,6 +40,7 @@ class CartView(ListView):
             # Assigning cart items to an empty list if customer is not logged in.
             cart_items = []
             return cart_items
+        # TODO: Rewrite code so order is only created when an item is added to cart
 
     def get_context_data(self, **kwargs):
         # Adding order to the context
@@ -63,7 +65,8 @@ class CartView(ListView):
 class CheckoutView(LoginRequiredMixin, View):
 
     def get(self, *args, **kwargs):
-        form = ShippingAddressForm()
+        shipping_form = ShippingAddressForm()
+        coupon_form = CouponForm()
 
         customer = self.request.user.customer
         # Gets customer's order with items or creates one if none available
@@ -73,50 +76,75 @@ class CheckoutView(LoginRequiredMixin, View):
         context = {
             'items': items,
             'order': order,
-            'form': form,
+            'form': shipping_form,
+            'c_form': coupon_form,
         }
 
         return render(self.request, 'shop/checkout.html', context)
 
     def post(self, *args, **kwargs):
-        # Checks if it is a POST request
-        if self.request.method == 'POST':
-            # Creates an instance of form with POST request
-            form = ShippingAddressForm(self.request.POST)
-            # print(self.request.POST)
-            # Form is validated and saved
+        # Creates an instance of form with POST request
+        shipping_form = ShippingAddressForm(self.request.POST)
+
+        try:
+
+            payment_choices = {
+                'S': 'stripe',
+                'p': 'paypal',
+            }
+
+            order = Order.objects.get(customer=self.request.user.customer, complete=False)
+            if shipping_form.is_valid():
+                # Using information from form provided by user to create a billing address object
+                street_address = shipping_form.cleaned_data.get('street_address')
+                apartment_address = shipping_form.cleaned_data.get('apartment_address')
+                city = shipping_form.cleaned_data.get('city')
+                country = shipping_form.cleaned_data.get('country')
+                payment_option = shipping_form.cleaned_data.get('payment_option')
+                billing_address = BillingAddress(
+                    customer=self.request.user.customer,
+                    country=country,
+                    street_address=street_address,
+                    city=city,
+                    apartment_address=apartment_address,
+                    payment_option=payment_option,
+                )
+                billing_address.save()
+                order.billing_address = billing_address
+                order.save()
+                messages.success(self.request, "Form submitted")
+                return redirect('payment', payment_option=payment_choices[payment_option])
+            messages.warning(self.request, 'Failed checkout. Make sure payment option has been chosen')
+            return redirect('checkout')
+        except ValueError:
+            messages.warning(self.request, 'You do not have an active order')
+            return redirect('checkout')
+
+    # TODO: Functionality to save shipping address for instance to pre-populate.
+
+
+class AddCouponView(View):
+
+    def post(self, *args, **kwargs):
+        form = CouponForm(self.request.POST)
+        if form.is_valid():
             try:
-
-                payment_choices = {
-                    'S': 'stripe',
-                    'p': 'paypal',
-                }
-
                 order = Order.objects.get(customer=self.request.user.customer, complete=False)
-                if form.is_valid():
-                    # Using information from form provided by user to create a billing address object
-                    street_address = form.cleaned_data.get('street_address')
-                    apartment_address = form.cleaned_data.get('apartment_address')
-                    city = form.cleaned_data.get('city')
-                    country = form.cleaned_data.get('country')
-                    payment_option = form.cleaned_data.get('payment_option')
-                    billing_address = BillingAddress(
-                        customer=self.request.user.customer,
-                        country=country,
-                        street_address=street_address,
-                        city=city,
-                        apartment_address=apartment_address,
-                    )
-                    billing_address.save()
-                    order.billing_address = billing_address
-                    order.save()
-                    messages.success(self.request, "Form submitted")
-                    return redirect('payment', payment_option=payment_choices[payment_option])
-                messages.warning(self.request, 'Failed checkout. Make sure payment option has been chosen')
+            except ObjectDoesNotExist:
+                messages.info(self.request, "You do not have an active order")
                 return redirect('checkout')
-            except ValueError:
-                messages.warning(self.request, 'You do not have an active order')
+            try:
+                code = form.cleaned_data.get('code')
+                coupon = Coupon.objects.get(code=code)
+                order.coupon = coupon
+                order.save()
+                messages.success(self.request, 'Successfully added coupon')
                 return redirect('checkout')
+            except ObjectDoesNotExist:
+                messages.warning(self.request, 'This coupon does not exist')
+                return redirect('checkout')
+
+    # TODO: Functionality to ensure a coupon is not used by one user twice.
 
 
 class PaymentView(LoginRequiredMixin, View):
@@ -173,45 +201,81 @@ class PaymentView(LoginRequiredMixin, View):
 
             # Display message if payment is successful
             messages.info(self.request, 'Your payment was successful')
-            return redirect('/')
+            return redirect('checkout')
 
         except stripe.error.CardError as e:
             # Since it's a decline, stripe.error.CardError will be caught
             messages.error(self.request, f'{e.user_message}')
-            return redirect('/')
+            return redirect('checkout')
 
         except stripe.error.RateLimitError as e:
             # Too many requests made to the API too quickly
-            messages.error(self.request, 'Rate Limit Error')
-            return redirect('/')
+            messages.warning(self.request, 'Rate Limit Error')
+            return redirect('checkout')
 
         except stripe.error.InvalidRequestError as e:
             # Invalid parameters were supplied to Stripe's API
-            messages.error(self.request, 'Invalid Parameters')
-            return redirect('/')
+            messages.warning(self.request, 'Invalid Parameters')
+            return redirect('checkout')
 
         except stripe.error.AuthenticationError as e:
             # Authentication with Stripe's API failed
             # (maybe you changed API keys recently)
-            messages.error(self.request, 'Not Authenticated')
-            return redirect('/')
+            messages.warning(self.request, 'Not Authenticated')
+            return redirect('checkout')
 
         except stripe.error.APIConnectionError as e:
             # Network communication with Stripe failed
-            messages.error(self.request, 'Network Error')
-            return redirect('/')
+            messages.warning(self.request, 'Network Error')
+            return redirect('checkout')
 
         except stripe.error.StripeError as e:
             # Display a very generic error to the user, and maybe send
             # yourself an email
-            messages.error(self.request, 'Something went wrong, you were not charged. Please try again.')
-            return redirect('/')
+            messages.warning(self.request, 'Something went wrong, you were not charged. Please try again.')
+            return redirect('checkout')
 
         except Exception as e:
             # Something else happened, completely unrelated to Stripe
             # Send an e-mail to myself.
-            messages.error(self.request, 'An error occurred. We have ben notified')
-            return redirect('/')
+            messages.warning(self.request, 'An error occurred. We have ben notified')
+            return redirect('checkout')
+
+
+class RefundView(View):
+    def get(self, *args, **kwargs):
+        form = RefundForm()
+        context = {
+            'form': form
+        }
+
+        return render(self.request, 'shop/refund_request.html', context)
+
+    def post(self, *args, **kwargs):
+        form = RefundForm(self.request.POST)
+        if form.is_valid():
+            order_id = form.cleaned_data.get('order_id')
+            message = form.cleaned_data.get('message')
+            email = form.cleaned_data.get('email')
+            try:
+                # Checks if order exists
+                order = Order.objects.get(transaction_id=order_id, complete=True)
+
+                # Edit the order
+                order.refund_requested = True
+                order.save()
+
+                # Save refund
+                refund = Refund()
+                refund.order = order
+                refund.message = message
+                refund.email = email
+                refund.save()
+                messages.success(self.request, 'Your request has been sent')
+                return redirect('refund-request')
+            except:
+                messages.warning(self.request, "This order does not exist.")
+                return redirect('refund-request')
 
 
 def update_item(request):
@@ -233,7 +297,7 @@ def update_item(request):
             item.quantity += 1
             messages.info(request, 'Item added to cart')
         else:
-            messages.info(request, 'Out of stock')
+            messages.warning(request, 'Out of stock')
 
     elif action == 'remove':
         item.quantity -= 1
@@ -248,6 +312,8 @@ def update_item(request):
         item.delete()
 
     return JsonResponse("Updated cart", safe=False)
+
+
 
 
 

@@ -4,6 +4,7 @@
 	<div class="container" style="text-align: center;">
 		<img style="height: 350px; width: 400px;" src="{{object.image.url}}" alt="">
 		<h2>{{object.name}}</h2>
+		<p>{{object.description}}</p>
 		<div class="justify-content-center" style="display:flex;">
 		{% if object.discount_price %}
 			<h2>GH<span>&#8373</span>{{object.discount_price|floatformat:2}}</h2>
