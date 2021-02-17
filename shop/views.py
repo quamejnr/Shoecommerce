@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product, Order, OrderItem, BillingAddress, Payment, Coupon, Refund
+from .models import Product, Order, OrderItem, Address, Payment, Coupon, Refund
 from django.views.generic import ListView, DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.contrib import messages
 from django.shortcuts import redirect
-from shop.forms import ShippingAddressForm, CouponForm, RefundForm
+from shop.forms import AddressForm, CouponForm, RefundForm
 import json
 import datetime
 import stripe
@@ -62,13 +62,21 @@ class CartView(ListView):
             return context
 
 
+def is_valid_form(values):
+    valid = True
+    for field in values:
+        if field == '':
+            valid = False
+    return valid
+
+
 class CheckoutView(LoginRequiredMixin, View):
 
     def get(self, *args, **kwargs):
-        shipping_form = ShippingAddressForm()
+        form = AddressForm()
         coupon_form = CouponForm()
-
         customer = self.request.user.customer
+
         # Gets customer's order with items or creates one if none available
         order = get_object_or_404(Order, customer=customer, complete=False)
         items = order.orderitem_set.all()
@@ -76,15 +84,31 @@ class CheckoutView(LoginRequiredMixin, View):
         context = {
             'items': items,
             'order': order,
-            'form': shipping_form,
+            'form': form,
             'c_form': coupon_form,
         }
+
+        shipping_address = Address.objects.filter(
+            customer=customer,
+            address_type='S',
+            default=True,
+        )
+        if shipping_address.exists():
+            context.update({'default_shipping_address': shipping_address[0]})
+
+        billing_address = Address.objects.filter(
+            customer=customer,
+            address_type='B',
+            default=True,
+        )
+        if billing_address.exists():
+            context.update({'default_billing_address': billing_address[0]})
 
         return render(self.request, 'shop/checkout.html', context)
 
     def post(self, *args, **kwargs):
         # Creates an instance of form with POST request
-        shipping_form = ShippingAddressForm(self.request.POST)
+        form = AddressForm(self.request.POST or None)
 
         try:
 
@@ -94,24 +118,106 @@ class CheckoutView(LoginRequiredMixin, View):
             }
 
             order = Order.objects.get(customer=self.request.user.customer, complete=False)
-            if shipping_form.is_valid():
-                # Using information from form provided by user to create a billing address object
-                street_address = shipping_form.cleaned_data.get('street_address')
-                apartment_address = shipping_form.cleaned_data.get('apartment_address')
-                city = shipping_form.cleaned_data.get('city')
-                country = shipping_form.cleaned_data.get('country')
-                payment_option = shipping_form.cleaned_data.get('payment_option')
-                billing_address = BillingAddress(
-                    customer=self.request.user.customer,
-                    country=country,
-                    street_address=street_address,
-                    city=city,
-                    apartment_address=apartment_address,
-                    payment_option=payment_option,
-                )
-                billing_address.save()
-                order.billing_address = billing_address
-                order.save()
+            if form.is_valid():
+
+                # SHIPPING ADDRESS VIEW
+                # Using default shipping address if available
+                use_default_shipping = form.cleaned_data.get('use_default_shipping')
+
+                if use_default_shipping:
+                    print('Using default shipping address')
+                    address_qs = Address.objects.filter(
+                        customer=self.request.user.customer,
+                        address_type='S',
+                        default=True,
+                    )
+                    shipping_address = address_qs[0]
+                    order.shipping_address = shipping_address
+                    order.save()
+
+                else:
+                    # Using information from form provided by user to create a billing address object
+                    shipping_address1 = form.cleaned_data.get('shipping_address1')
+                    shipping_address2 = form.cleaned_data.get('shipping_address2')
+                    shipping_city = form.cleaned_data.get('shipping_city')
+                    shipping_zip = form.cleaned_data.get('shipping_zip')
+                    shipping_country = form.cleaned_data.get('shipping_country')
+
+                    if is_valid_form([shipping_address1, shipping_city, shipping_country]):
+                        shipping_address = Address(
+                            customer=self.request.user.customer,
+                            country=shipping_country,
+                            street_address=shipping_address1,
+                            city=shipping_city,
+                            zip_code=shipping_zip,
+                            apartment_address=shipping_address2,
+                            address_type='S',
+                        )
+                        shipping_address.save()
+
+                        # Making current shipping address the default if chosen to be default
+                        set_default_shipping = form.cleaned_data.get('set_default_shipping')
+                        if set_default_shipping:
+                            shipping_address.default = True
+                            shipping_address.save()
+
+                    else:
+                        messages.info(self.request, 'Please fill in the required fields in the Shipping Address')
+
+                # BILLING ADDRESS VIEW
+                # Using default billing address if available
+                same_billing_address = form.cleaned_data.get('same_billing_address')
+                use_default_billing = form.cleaned_data.get('use_default_billing')
+
+                if same_billing_address:
+                    billing_address = shipping_address
+                    billing_address.pk = None
+                    billing_address.address_type = 'B'
+                    billing_address.save()
+                    order.billing_address = billing_address
+                    order.save()
+
+                elif use_default_billing:
+                    address_qs = Address.objects.filter(
+                        customer=self.request.user.customer,
+                        address_type='B',
+                        default=True,
+                    )
+                    billing_address = address_qs[0]
+                    order.billing_address = billing_address
+                    order.save()
+
+                else:
+                    # Using information from form provided by user to create a billing address object
+                    billing_address1 = form.cleaned_data.get('billing_address1')
+                    billing_address2 = form.cleaned_data.get('billing_address2')
+                    billing_city = form.cleaned_data.get('billing_city')
+                    billing_zip = form.cleaned_data.get('billing_zip')
+                    billing_country = form.cleaned_data.get('billing_country')
+
+                    if is_valid_form([billing_address1, billing_city, billing_country]):
+                        billing_address = Address(
+                            customer=self.request.user.customer,
+                            country=billing_country,
+                            street_address=billing_address1,
+                            city=billing_city,
+                            zip_code=billing_zip,
+                            apartment_address=billing_address2,
+                            address_type='B',
+                        )
+                        billing_address.save()
+
+                        # Making current billing address the default if chosen to be default
+                        set_default_billing = form.cleaned_data.get('set_default_billing')
+                        if set_default_billing:
+                            billing_address.default = True
+                            billing_address.save()
+
+                    else:
+                        messages.info(self.request, 'Please fill in the required fields in Billing Address')
+                        return redirect('checkout')
+
+                payment_option = form.cleaned_data.get('payment_option')
                 messages.success(self.request, "Form submitted")
                 return redirect('payment', payment_option=payment_choices[payment_option])
             messages.warning(self.request, 'Failed checkout. Make sure payment option has been chosen')
@@ -119,8 +225,6 @@ class CheckoutView(LoginRequiredMixin, View):
         except ValueError:
             messages.warning(self.request, 'You do not have an active order')
             return redirect('checkout')
-
-    # TODO: Functionality to save shipping address for instance to pre-populate.
 
 
 class AddCouponView(View):
@@ -136,15 +240,22 @@ class AddCouponView(View):
             try:
                 code = form.cleaned_data.get('code')
                 coupon = Coupon.objects.get(code=code)
-                order.coupon = coupon
-                order.save()
-                messages.success(self.request, 'Successfully added coupon')
-                return redirect('checkout')
+
+                # check if user has already used coupon before
+                # then add to order if the customer hasn't
+                customer = self.request.user.customer
+                user_coupons = customer.coupons.all()
+                if coupon in user_coupons:
+                    messages.warning(self.request, "This coupon has already been used")
+                    return redirect('checkout')
+                else:
+                    order.coupon = coupon
+                    order.save()
+                    messages.success(self.request, 'Successfully added coupon')
+                    return redirect('checkout')
             except ObjectDoesNotExist:
                 messages.warning(self.request, 'This coupon does not exist')
                 return redirect('checkout')
-
-    # TODO: Functionality to ensure a coupon is not used by one user twice.
 
 
 class PaymentView(LoginRequiredMixin, View):
@@ -193,6 +304,11 @@ class PaymentView(LoginRequiredMixin, View):
             order.transaction_id = transaction_id
             order.complete = True
             order.save()
+
+            # Associating coupon with customer so it can't be used by same customer again
+            customer = self.request.user.customer
+            customer.coupons.add(order.coupon)
+            customer.save()
 
             # Changing product quantity after transaction
             for order_item in order_items:
@@ -273,8 +389,8 @@ class RefundView(View):
                 refund.save()
                 messages.success(self.request, 'Your request has been sent')
                 return redirect('refund-request')
-            except:
-                messages.warning(self.request, "This order does not exist.")
+            except ObjectDoesNotExist:
+                messages.warning(self.request, "This order does not exist")
                 return redirect('refund-request')
 
 

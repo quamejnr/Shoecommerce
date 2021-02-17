@@ -1,5 +1,6 @@
 from django import forms
 from django_countries.fields import CountryField
+from django_countries.widgets import CountrySelectWidget
 
 
 PAYMENT_CHOICES = (
@@ -9,21 +10,34 @@ PAYMENT_CHOICES = (
 )
 
 
-class ShippingAddressForm(forms.Form):
-    street_address = forms.CharField(widget=forms.TextInput(attrs={
-        'placeholder': '6 Neem Ln'
-    }))
-    apartment_address = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': 'Hse No 64/5'
-    }))
+class AddressForm(forms.Form):
+    shipping_address1 = forms.CharField(required=False)
+    shipping_address2 = forms.CharField(required=False)
+    shipping_city = forms.CharField(required=False)
+    shipping_country = CountryField(blank_label='(select country)').formfield(
+        required=False,
+        widget=CountrySelectWidget(
+            attrs={'class': 'custom-select d-block w-100'}
+        ))
+    shipping_zip = forms.CharField(required=False)
 
-    city = forms.CharField(widget=forms.TextInput(attrs={
-        'placeholder': 'Accra'
-    }))
+    same_billing_address = forms.BooleanField(required=False)
+    set_default_shipping = forms.BooleanField(required=False)
+    use_default_shipping = forms.BooleanField(required=False)
 
-    country = CountryField(blank_label='select country').formfield()
-    same_billing_address = forms.BooleanField(widget=forms.CheckboxInput, required=False)
-    save_info = forms.BooleanField(widget=forms.CheckboxInput, required=False)
+    billing_address1 = forms.CharField(required=False)
+    billing_address2 = forms.CharField(required=False)
+    billing_city = forms.CharField(required=False)
+    billing_country = CountryField(blank_label='(select country)').formfield(
+        required=False,
+        widget=CountrySelectWidget(
+            attrs={'class': 'custom-select d-block w-100'}
+        ))
+    billing_zip = forms.CharField(required=False)
+
+    set_default_billing = forms.BooleanField(required=False)
+    use_default_billing = forms.BooleanField(required=False)
+
     payment_option = forms.ChoiceField(widget=forms.RadioSelect, choices=PAYMENT_CHOICES)
 
 

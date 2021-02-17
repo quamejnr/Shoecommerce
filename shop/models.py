@@ -6,6 +6,12 @@ from django.shortcuts import reverse
 from django_countries.fields import CountryField
 
 
+ADDRESS_CHOICES = (
+    ('B', 'Billing'),
+    ('S', "Shipping"),
+)
+
+
 class Product(models.Model):
     name = models.CharField(max_length=200)
     brand = models.CharField(max_length=100, null=True, blank=True)
@@ -34,9 +40,18 @@ class Product(models.Model):
                 img.save(self.image.path)
 
 
+class Coupon(models.Model):
+    code = models.CharField(max_length=20)
+    amount = models.FloatField()
+
+    def __str__(self):
+        return self.code
+
+
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200, null=True)
+    coupons = models.ManyToManyField(Coupon, blank=True)
 
     # image = CloudinaryField('image')
 
@@ -44,14 +59,16 @@ class Customer(models.Model):
         return self.name
 
 
-class BillingAddress(models.Model):
+class Address(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
     country = CountryField(blank_label='select country', null=True, multiple=False)
-    street_address = models.CharField(max_length=200, null=False)
-    apartment_address = models.CharField(max_length=200, null=False, blank=True)
-    city = models.CharField(max_length=200, null=False)
+    street_address = models.CharField(max_length=200, null=True)
+    apartment_address = models.CharField(max_length=200, null=True, blank=True)
+    city = models.CharField(max_length=200, null=True)
+    zip_code = models.CharField(max_length=20, null=True, blank=True)
+    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
+    default = models.BooleanField(default=False)
     date_added = models.DateTimeField(auto_now_add=True)
-    payment_option = models.CharField(max_length=10, null=True, blank=True)
 
     @property
     def address(self):
@@ -59,6 +76,9 @@ class BillingAddress(models.Model):
 
     def __str__(self):
         return self.address
+
+    class Meta:
+        verbose_name_plural = 'Addresses'
 
 
 class Payment(models.Model):
@@ -71,20 +91,15 @@ class Payment(models.Model):
         return f'Ghc{self.amount:.2f}'
 
 
-class Coupon(models.Model):
-    code = models.CharField(max_length=20)
-    amount = models.FloatField()
-
-    def __str__(self):
-        return self.code
-
-
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False, null=True, blank=False)
     transaction_id = models.CharField(max_length=200, null=True)
-    billing_address = models.ForeignKey(BillingAddress, on_delete=models.SET_NULL, null=True, blank=True)
+    billing_address = models.ForeignKey(Address, related_name='billing_address', on_delete=models.SET_NULL,
+                                        null=True, blank=True)
+    shipping_address = models.ForeignKey(Address, related_name='shipping_address', on_delete=models.SET_NULL,
+                                         null=True, blank=True)
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True, blank=True)
     coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
     order_sent = models.BooleanField(default=False, null=True, blank=False)
@@ -92,19 +107,11 @@ class Order(models.Model):
     refund_requested = models.BooleanField(default=False, null=True, blank=False)
     refund_granted = models.BooleanField(default=False, null=True, blank=False)
 
-    """
-    1. Item added to cart
-    2. Adding a billing address
-    3. Payment
-    4. Delivery
-    5. Received
-    6. Refunds
-    """
-
     def __str__(self):
         if self.transaction_id:
-            return f'{self.customer.name} - {self.transaction_id}'
-        return self.customer.name
+            return self.transaction_id
+        else:
+            return "N/A"
 
     def shipping(self):
         # Returns a boolean as to whether a product is digital or not
@@ -158,4 +165,4 @@ class Refund(models.Model):
     refund_accepted = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.id}"
+        return self.order.transaction_id
