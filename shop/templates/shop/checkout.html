@@ -9,8 +9,8 @@
 				<div class="box-element" id="form-wrapper">
 
 <!--				Shipping Form-->
-					<div class="hide_shipping_form">
-						<h3>Shipping Address</h3>
+					<h3>Shipping Address</h3>
+					<div class="shipping_form">
 						<br>
 						<div class="form-group">
 							<label for="shipping_address1">Street Address</label>
@@ -43,24 +43,25 @@
 								<input type="checkbox" class="custom-control-input" name="set_default_shipping" id="set_default_shipping">
 								<label class="custom-control-label" for="set_default_shipping">Save as default shipping address</label>
 							</div>
-							<div class="custom-control custom-checkbox mb-2">
-								<input type="checkbox" class="custom-control-input" name="same_billing_address" id="same_billing_address">
-								<label class="custom-control-label" for="same_billing_address">Shipping Address is the same as my Billing Address</label>
-							</div>
-							{% if default_shipping_address%}
-								<div class="custom-control custom-checkbox">
-									<input type="checkbox" class="custom-control-input" name="use_default_shipping" id="use_default_shipping">
-									<label class="custom-control-label" for="use_default_shipping">Use default shipping address: {{default_shipping_address.street_address|truncatechars:10}}</label>
-								</div>
-							{% endif %}
 						</div>
+					</div>
+
+					{% if default_shipping_address%}
+						<div class="custom-control custom-checkbox mb-2">
+							<input type="checkbox" class="custom-control-input" name="use_default_shipping" id="use_default_shipping">
+							<label class="custom-control-label" for="use_default_shipping">Use default shipping address: {{default_shipping_address.street_address|truncatechars:10}}</label>
+						</div>
+					{% endif %}
+					<div class="custom-control custom-checkbox mb-2">
+						<input type="checkbox" class="custom-control-input" name="same_billing_address" id="same_billing_address">
+						<label class="custom-control-label" for="same_billing_address">Shipping Address is the same as my Billing Address</label>
 					</div>
 
 					<hr>
 
 <!--				Billing Form-->
-					<div class="hide_shipping_form">
-						<h3>Billing Address</h3>
+					<h3>Billing Address</h3>
+					<div class="billing_form">
 						<br>
 						<div class="form-group">
 							<label for="billing_address1">Street Address</label>
@@ -94,14 +95,14 @@
 								<input type="checkbox" class="custom-control-input" name="set_default_billing" id="set_default_billing">
 								<label class="custom-control-label" for="set_default_billing">Save as default billing address</label>
 							</div>
-							{% if default_billing_address%}
-								<div class="custom-control custom-checkbox">
-									<input type="checkbox" class="custom-control-input" name="use_default_billing" id="use_default_billing">
-									<label class="custom-control-label" for="use_default_billing">Use default billing address: {{default_billing_address.street_address|truncatechars:10}}</label>
-								</div>
-							{% endif %}
 						</div>
 					</div>
+					{% if default_billing_address%}
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" class="custom-control-input" name="use_default_billing" id="use_default_billing">
+							<label class="custom-control-label" for="use_default_billing">Use default billing address: {{default_billing_address.street_address|truncatechars:10}}</label>
+						</div>
+					{% endif %}
 
 					<hr>
 
@@ -174,42 +175,39 @@
 		</div>
 	</div>
 
-<!--	<script type="text/javascript">-->
-
-<!--		if(user != 'AnonymousUser'){-->
-<!--			//Hide user info when user is logged in-->
-<!--			document.getElementById('user-info').innerHTML = ''-->
-<!--		}-->
-
-<!--		var shipping = '{{order.shipping}}'-->
-
-<!--		if(user != 'AnonymousUser' && shipping == 'False'){-->
-<!--			//Hide continue button and show payment button-->
-<!--			document.getElementById('form-wrapper').classList.add('hidden')-->
-<!--			document.getElementById('payment-info').classList.remove('hidden')-->
-<!--		}-->
-
-
-
-<!--		var form = document.getElementById('form')-->
-
-<!--		form.addEventListener("submit", function(e){-->
-<!--			e.preventDefault()-->
-<!--			console.log("Form submitted..")-->
-
-<!--			document.getElementById('form-button').classList.add('hidden')-->
-<!--			document.getElementById('payment-info').classList.remove('hidden')-->
-<!--		})-->
-
-
-<!--		function submitFormData(){-->
-<!--			console.log('Payment button clicked')-->
-<!--		}-->
-
-<!--		document.getElementById("make-payment").addEventListener("click", function(e){-->
-<!--			submitFormData()-->
-<!--		})-->
-
-<!--	</script>-->
-
 {% endblock content %}
+
+{% block script %}
+<script>
+	var shipping_form = $('.shipping_form');
+	var billing_form = $('.billing_form');
+
+	var use_default_shipping = document.querySelector('input[name=use_default_shipping]');
+	var use_default_billing = document.querySelector('input[name=use_default_billing]');
+	var same_billing_address = document.querySelector('input[name=same_billing_address]');
+
+	use_default_shipping.addEventListener('change', function() {
+		if (this.checked) {
+			shipping_form.hide();
+		} else {
+			shipping_form.show();
+		}
+	})
+
+	use_default_billing.addEventListener('change', function() {
+		if (this.checked) {
+			billing_form.hide();
+		} else {
+			billing_form.show();
+		}
+	})
+
+	same_billing_address.addEventListener('change', function() {
+		if (this.checked) {
+			billing_form.hide();
+		} else {
+			billing_form.show();
+		}
+	})
+</script>
+{% endblock script %}

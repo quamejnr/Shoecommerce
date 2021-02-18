@@ -316,8 +316,10 @@ class PaymentView(LoginRequiredMixin, View):
                 order_item.product.save()
 
             # Display message if payment is successful
-            messages.info(self.request, 'Your payment was successful')
-            return redirect('checkout')
+            # messages.success(self.request, f'Your payment of Gh\u20b5{amount/100:,.2f} was successful. '
+            #                                f'Thank you for shopping with us.')
+            messages.success(self.request, 'Your payment was successful')
+            return redirect('store')
 
         except stripe.error.CardError as e:
             # Since it's a decline, stripe.error.CardError will be caught
