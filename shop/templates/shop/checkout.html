@@ -6,7 +6,7 @@
 		<div class="col-lg-6">
 			<form id="form" class="card-body" method="POST" enctype="multipart/form-data">
 			{%csrf_token%}
-				<div class="box-element" id="form-wrapper">
+				<div class="box-element mt-1" id="form-wrapper">
 
 <!--				Shipping Form-->
 					<h3>Shipping Address</h3>
@@ -125,8 +125,10 @@
 
 			<br>
 		</div>
+
+ <!--   Order Summary-->
 		<div class="col-lg-6">
-			<div class="box-element">
+			<div class="box-element mt-4">
 				<a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
 				<hr>
 				<h3>Order Summary</h3>

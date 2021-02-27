@@ -50,13 +50,10 @@ class Coupon(models.Model):
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    name = models.CharField(max_length=200, null=True)
     coupons = models.ManyToManyField(Coupon, blank=True)
 
-    # image = CloudinaryField('image')
-
     def __str__(self):
-        return self.name
+        return self.user.username
 
 
 class Address(models.Model):
