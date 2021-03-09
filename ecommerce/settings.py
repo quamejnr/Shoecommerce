@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'shop.apps.ShopConfig',
+    'users.apps.UsersConfig',
     'crispy_forms',
     'django_countries',
     'django.contrib.admin',
@@ -121,6 +122,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+LOGIN_REDIRECT_URL = 'store'
+LOGOUT_REDIRECT_URL = 'store'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
@@ -129,3 +133,7 @@ MEDIA_URL = '/media/'
 
 # Stripe
 STRIPE_SECRET_KEY = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
+
+# Testing mail
+EMAIL_HOST = "localhost"
+EMAIL_PORT = 1025

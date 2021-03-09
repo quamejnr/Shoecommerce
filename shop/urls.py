@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path, include
 from shop.views import StoreListView, ProductView, CheckoutView, CartView, update_item, PaymentView, AddCouponView, RefundView
 
@@ -11,6 +10,6 @@ urlpatterns = [
     path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('payment/<payment_option>', PaymentView.as_view(), name='payment'),
     path('coupon/', AddCouponView.as_view(), name='add_coupon'),
-    path('refund_request/', RefundView.as_view(), name='refund-request')
+    path('refund_request/', RefundView.as_view(), name='refund-request'),
 
 ]

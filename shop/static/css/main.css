@@ -99,3 +99,47 @@ h1,h2,h3,h4,h5,h6{
 	display: none!important;
 }
 
+
+
+/* MY CSS */
+/* Register */
+        #register_form {
+            width: 50%;
+            margin: 100px auto;
+            border: 1px solid var(--accent);
+            padding: 20px;
+        }
+
+        #register_form .leg {
+            color: var(--primary);
+            font-size: 50px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        #register_form p {
+            color: var(--secondary);
+            font-size: 20px;
+        }
+
+        #register_form .forms {
+            color: var(--secondary);
+        }
+
+        #register_form .reg-footer {
+            margin-top: 20px;
+            color: var(--secondary);
+        }
+
+        #register_form .sign {
+            color: rgba(64, 224, 208, 0.8);
+        }
+
+        #logout_form {
+            width: 50%;
+            margin: 100px auto;
+            border: 1px solid var(--accent);
+            padding: 20px;
+            color: var(--accent);
+        }
