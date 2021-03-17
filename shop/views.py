@@ -241,8 +241,8 @@ class AddCouponView(View):
                 code = form.cleaned_data.get('code')
                 coupon = Coupon.objects.get(code=code)
 
-                # check if user has already used coupon before
-                # then add to order if the customer hasn't
+                # check if user has already used coupon before,
+                # then adds to order if the customer hasn't
                 customer = self.request.user.customer
                 user_coupons = customer.coupons.all()
                 if coupon in user_coupons:

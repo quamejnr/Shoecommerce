@@ -49,7 +49,7 @@ class Coupon(models.Model):
 
 
 class Customer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     coupons = models.ManyToManyField(Coupon, blank=True)
 
     def __str__(self):
