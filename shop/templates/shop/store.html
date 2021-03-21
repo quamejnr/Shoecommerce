@@ -2,26 +2,29 @@
 {% load static %}
 {% block content %}
 
-	<div class="row">
+	<div class="row mt-4 mb-5">
 		{% for product in object_list %}
-			<div class="col-lg-4">
+
+		<div class="col-lg-4 mb-4">
+			<a href="{{product.get_absolute_url}}" style="text-decoration: none;">
 				<img class="thumbnail" style="height: 300px; width: 350px" src="{{product.image.url}}" alt="">
 				<div class="box-element product">
 					<h6><strong>{{product.name}}</strong></h6>
 					<hr>
 
-					<a class="btn btn-outline-success" href="{{product.get_absolute_url}}">View</a>
-					<h4 style="display: inline-block; float: right">
+<!--					<a class="btn btn-outline-success" href="{{product.get_absolute_url}}">View</a>-->
+					<p style="display: inline-block;">
 						{% if product.discount_price %}
-							<del><strong>GH<span>&#8373</span>{{product.price|floatformat:2}}</strong></del>
-							<strong>GH<span>&#8373</span>{{product.discount_price|floatformat:2}}</strong>
+							<del class="mr-2" style="color: #d80707;"><strong>GH<span>&#8373</span>{{product.price|floatformat:2}}</strong></del>
+							<strong style="color: #4D4D4D">GH<span>&#8373</span>{{product.discount_price|floatformat:2}}</strong>
 						{% else %}
-							<strong>GH<span>&#8373</span>{{product.price|floatformat:2}}</strong>
+							<strong style="color: #4D4D4D">GH<span>&#8373</span>{{product.price|floatformat:2}}</strong>
 						{% endif %}
-					</h4>
+					</p>
 
 				</div>
-			</div>
+			</a>
+		</div>
 		{% endfor %}
 	</div>
 {% endblock content %}

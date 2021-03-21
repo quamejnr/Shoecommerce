@@ -1,7 +1,7 @@
 {% extends 'shop/base.html' %}
 {% load static %}
 {% block content %}
-	<div class="container" style="text-align: center;">
+	<div class="container mt-5 mb-5" style="text-align: center;">
 		<img style="height: 350px; width: 400px;" src="{{object.image.url}}" alt="">
 		<h2>{{object.name}}</h2>
 		<p>{{object.description}}</p>
@@ -13,7 +13,7 @@
 		{% endif %}
 		</div>
 		<br>
-			<button data-product="{{object.id}}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">
+			<button data-product="{{object.id}}" data-action="add" class="btn btn-success add-btn update-cart">
 				Add to Cart
 			</button>
 

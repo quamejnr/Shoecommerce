@@ -1,6 +1,10 @@
 
+
 body{
 	background-color: hsl(0, 0%, 98%);
+	min-height: 100%;
+	position: relative;
+	padding-bottom: 200px;
 }
 
 h1,h2,h3,h4,h5,h6{
@@ -99,6 +103,15 @@ h1,h2,h3,h4,h5,h6{
 	display: none!important;
 }
 
+footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: grey;
+    text-align: center;
+    height: 100px;
+}
 
 
 /* MY CSS */

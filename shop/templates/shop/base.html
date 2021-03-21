@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
 {% load cart_template_tags %}
-<html lang="en">
+<html lang="en" style="height: 100%;">
 <head>
     <meta charset="UTF-8">
     <title>MyShop</title>
@@ -92,6 +92,15 @@
     <main class="container">
         {% block content %}{% endblock content %}
     </main>
+    <footer>
+<!--        <div class="center">-->
+<!--            <p>-->
+<!--                © 2021 The Mall-->
+<!--            </p>-->
+<!--        </div>-->
+        © 2021 The Mall
+
+    </footer>
 
     <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
     {% block script %}{% endblock script %}
