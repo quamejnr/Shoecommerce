@@ -13,6 +13,10 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet">
 
+<!--    Google Fonts-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Oswald&display=swap" rel="stylesheet">
+
 <!--    FontAwesome -->
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
@@ -92,15 +96,15 @@
     <main class="container">
         {% block content %}{% endblock content %}
     </main>
-    <footer>
-<!--        <div class="center">-->
-<!--            <p>-->
-<!--                © 2021 The Mall-->
-<!--            </p>-->
-<!--        </div>-->
-        © 2021 The Mall
+<!--    <footer>-->
+<!--&lt;!&ndash;        <div class="center">&ndash;&gt;-->
+<!--&lt;!&ndash;            <p>&ndash;&gt;-->
+<!--&lt;!&ndash;                © 2021 The Mall&ndash;&gt;-->
+<!--&lt;!&ndash;            </p>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--        © 2021 The Mall-->
 
-    </footer>
+<!--    </footer>-->
 
     <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
     {% block script %}{% endblock script %}

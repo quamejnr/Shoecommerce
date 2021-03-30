@@ -20,7 +20,7 @@ class Product(models.Model):
     discount_price = models.FloatField(null=True, blank=True)
     digital = models.BooleanField(default=False)
     image = models.ImageField(null=True)
-    description = models.TextField(max_length=200, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     slug = AutoSlugField(populate_from='name', unique=True)
 
     def __str__(self):
@@ -38,6 +38,8 @@ class Product(models.Model):
                 output_size = (800, 800)
                 img.thumbnail(output_size)
                 img.save(self.image.path)
+
+    # TODO: Write code for discount price percentage
 
 
 class Coupon(models.Model):

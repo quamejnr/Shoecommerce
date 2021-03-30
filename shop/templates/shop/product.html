@@ -1,25 +1,41 @@
 {% extends 'shop/base.html' %}
 {% load static %}
 {% block content %}
-	<div class="container mt-5 mb-5" style="text-align: center;">
-		<img style="height: 350px; width: 400px;" src="{{object.image.url}}" alt="">
-		<h2>{{object.name}}</h2>
-		<p>{{object.description}}</p>
-		<div class="justify-content-center" style="display:flex;">
-		{% if object.discount_price %}
-			<h2>GH<span>&#8373</span>{{object.discount_price|floatformat:2}}</h2>
-		{% else %}
-			<h2>GH<span>&#8373</span>{{object.price|floatformat:2}}</h2>
-		{% endif %}
-		</div>
-		<br>
-			<button data-product="{{object.id}}" data-action="add" class="btn btn-success add-btn update-cart">
-				Add to Cart
-			</button>
+<!--	<div class="container mt-5 mb-5" style="text-align: center;">-->
+<!--		<img style="height: 350px; width: 400px;" src="{{object.image.url}}" alt="">-->
+<!--		<h2>{{object.name}}</h2>-->
+<!--		<p>{{object.description}}</p>-->
+<!--		<div class="justify-content-center" style="display:flex;">-->
+<!--		{% if object.discount_price %}-->
+<!--			<h2>GH<span>&#8373</span>{{object.discount_price|floatformat:2}}</h2>-->
+<!--		{% else %}-->
+<!--			<h2>GH<span>&#8373</span>{{object.price|floatformat:2}}</h2>-->
+<!--		{% endif %}-->
+<!--		</div>-->
+<!--		<br>-->
+<!--			<button data-product="{{object.id}}" data-action="add" class="btn btn-success add-btn update-cart">-->
+<!--				Add to Cart-->
+<!--			</button>-->
 
-			<button data-product="{{object.id}}" data-action="remove" class="btn btn-outline-danger add-btn update-cart">
-				Remove from Cart
-			</button>
+<!--			<button data-product="{{object.id}}" data-action="remove" class="btn btn-outline-danger add-btn update-cart">-->
+<!--				Remove from Cart-->
+<!--			</button>-->
 
-	</div>
+<!--	</div>-->
+	 <article class="product-card">
+			<img src="{{object.image.url}}" alt="" class="product-card-img">
+			<div class="product-card-content">
+				<h2 class="project-card-title mb-4">
+					{{object.name}}
+				</h2>
+				<hr>
+				<p class="product-card-text">
+					{{object.description}}
+				</p>
+				<hr>
+				<button data-product="{{object.id}}" data-action="add" class="product-card-button add-btn update-cart mb-2">
+					Add to Cart
+				</button>
+			</div>
+		</article>
 {% endblock content %}
