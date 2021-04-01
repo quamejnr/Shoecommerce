@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import F
 from PIL import Image
 from autoslug import AutoSlugField
 from django.contrib.auth.models import User
@@ -40,6 +41,13 @@ class Product(models.Model):
                 img.save(self.image.path)
 
     # TODO: Write code for discount price percentage
+
+    @property
+    def discount(self):
+        if self.discount_price:
+            return int(((self.price - self.discount_price) / self.price) * 100)
+        else:
+            return 0
 
 
 class Coupon(models.Model):

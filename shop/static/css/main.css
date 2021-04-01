@@ -5,9 +5,7 @@ body {
 	position: relative;
 	padding-bottom: 200px;
 	font-family: 'Oswald', sans-serif;
-	max-width: 100%;
-	margin: auto;
-	background: rgb(242, 243, 248);
+	background: rgb(241, 241, 241);
 }
 
 
@@ -207,6 +205,12 @@ footer {
             line-height: 1.4;
             text-align: justify;
         }
+
+        .product-card-price {
+            font-size: 20px;
+            font-weight: 600;
+            color: #545b62;
+        }
         .product-card-button {
             margin: 1.5rem 0 0;
             border: none;
@@ -227,20 +231,21 @@ footer {
         /* Cards */
         .content {
             font-family: 'Oswald', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             width: 100%;
-            margin: auto;
+            margin: 50px auto;
 
         }
 
         .con-cards {
-            display: flex;
+            /* display: flex;
             flex-wrap: wrap;
             width: 100%;
             margin: auto;
-            padding: 50px 0px 0px 0px;
+            padding: 50px 0px 0px 0px; */
+
+            display: grid;
+            grid-gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 
         }
 
@@ -251,47 +256,54 @@ footer {
 
 
         .card {
-            width: 300px;
-            min-width: 300px;
-            height: 400px;
-            background: #fff;
+            width: 100%;
+            max-width: 300px;
+            min-height: 400px;
             position: relative;
             z-index: 10;
-            margin: 5px;
-            border-radius: 8px;
             border: none;
-            box-shadow: #ededed 0px 10px 30px -10px;
+            border-radius: 8px;
+            background: #ffffff;
+            box-shadow:  5px 5px 10px #e0e0e0,
+                         -5px -5px 10px #ffffff;
+            box-shadow: 0 0.2rem 1rem -1.4rem rgba(0,0,0,0.5);
             overflow: hidden;
 
         }
 
         .card h2 {
-            font-size: 24px;
+            font-size: 22px;
+            font-weight: 700;
         }
 
-        .card h3 {
+        .card .con-discount {
             position: absolute;
             left: -15px;
-            top: 10px;
+            top: 20px;
             padding: 10px;
-            background-color: rgb(226 0 0 / 80%);
+            background-color: rgba(226, 0, 0,.85);
             border-radius: 15px;
             width: 60px;
-            color: white;
-            font-size: 14px;
             text-align: right;
             box-shadow: #e2004b 0px 7px 30px -10px;
+            opacity: 0.85;
+        }
+        .card h3 {
+            color: white;
+            font-size: 14px;
+            opacity: 1;
         }
 
         .card .con-img {
-
-            margin-top: -85px;
             display: flex;
             justify-content: center;
+
         }
 
         .card img {
-            height: 300px;
+            max-width: 300px;
+            width: 100%;
+            height: auto;
 
         }
 
@@ -302,5 +314,5 @@ footer {
 
         .card .con-price {
             font-size: 16px;
-            margin-bottom: 10px;
+            margin-bottom: 50%;
         }

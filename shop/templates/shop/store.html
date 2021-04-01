@@ -1,57 +1,40 @@
 {% extends 'shop/base.html' %}
 {% load static %}
 {% block content %}
-
-<!--	<div class="row mt-4 mb-5">-->
-<!--		{% for product in object_list %}-->
-
-<!--		<div class="col-lg-4 mb-4">-->
-<!--			<a href="{{product.get_absolute_url}}" style="text-decoration: none;">-->
-<!--				<img class="thumbnail" style="height: 300px; width: 350px" src="{{product.image.url}}" alt="">-->
-<!--				<div class="box-element product">-->
-<!--					<h6><strong>{{product.name}}</strong></h6>-->
-<!--					<hr>-->
-
-<!--&lt;!&ndash;					<a class="btn btn-outline-success" href="{{product.get_absolute_url}}">View</a>&ndash;&gt;-->
-<!--					<p style="display: inline-block;">-->
-<!--						{% if product.discount_price %}-->
-<!--							<del class="mr-2" style="color: #d80707;"><strong>GH<span>&#8373</span>{{product.price|floatformat:2}}</strong></del>-->
-<!--							<strong style="color: #4D4D4D">GH<span>&#8373</span>{{product.discount_price|floatformat:2}}</strong>-->
-<!--						{% else %}-->
-<!--							<strong style="color: #4D4D4D">GH<span>&#8373</span>{{product.price|floatformat:2}}</strong>-->
-<!--						{% endif %}-->
-<!--					</p>-->
-
-<!--				</div>-->
-<!--			</a>-->
-<!--		</div>-->
-<!--		{% endfor %}-->
-<!--	</div>-->
 	<article class="content">
         <div class="con-cards">
 			{% for product in object_list %}
-			<a href="{{product.get_absolute_url}}">
+<!--			-->
 				<div class="card">
-<!--					<h3> -10% </h3>-->
-					<div class="con-img">
-						<img src="{{product.image.url}}" alt="">
-					</div>
-					<div class="con-text">
-						<h2>{{product.name}}</h2>
-						<hr>
-	<!--					<p>{{product.description}}</p>-->
-						<div class="con-price">
-							{% if product.discount_price %}
-								<del class="mr-2" style="color: #d80707;"><strong>GH<span>&#8373</span>{{product.price|floatformat:2}}</strong></del>
-								<strong style="color: #4D4D4D">GH<span>&#8373</span>{{product.discount_price|floatformat:2}}</strong>
-							{% else %}
-								<strong style="color: #4D4D4D">GH<span>&#8373</span>{{product.price|floatformat:2}}</strong>
-							{% endif %}
+					<a href="{{product.get_absolute_url}}">
+						{%if product.discount_price%}
+							<div class="con-discount">
+								<h3> -{{product.discount}}% </h3>
+							</div>
+						{%endif%}
+						<div class="con-img">
+							<img src="{{product.image.url}}" alt="">
 						</div>
+						<div class="con-text">
+							<h2>{{product.name}}</h2>
+							<hr>
+<!--							<p>{{product.description}}</p>-->
+							<div class="con-price">
+								{% if product.discount_price %}
+									<del class="mr-2" style="color: #d80707;"><strong>GH<span>&#8373</span>{{product.price|floatformat:2}}</strong></del>
+									<strong style="color: #4D4D4D">GH<span>&#8373</span>{{product.discount_price|floatformat:2}}</strong>
+								{% else %}
+									<strong style="color: #4D4D4D">GH<span>&#8373</span>{{product.price|floatformat:2}}</strong>
+								{% endif %}
+							</div>
 
-					</div>
+						</div>
+					</a>
+<!--					<button data-product="{{object.id}}" data-action="add" class="product-card-button add-btn update-cart mb-2">-->
+<!--					Add to Cart-->
+<!--					</button>-->
 				</div>
-			</a>
+<!--			</a>-->
 			{% endfor %}
         </div>
     </article>
