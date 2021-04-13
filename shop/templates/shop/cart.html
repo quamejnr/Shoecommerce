@@ -14,7 +14,7 @@
 						<th><h5>Items: <strong>{{order.cart_items}}</strong></h5></th>
 						<th><h5>Total: <strong>Gh<span>&#8373</span>{{order.cart_total|floatformat:2}}</strong></h5></th>
 						<th>
-							<a style="float:right; margin:5px;" class="btn btn-primary" href="{% url 'checkout' %}">
+							<a style="float:right; margin:5px;" class="btn btn-danger" href="{% url 'checkout' %}">
 								Checkout
 							</a>
 						</th>
@@ -26,14 +26,15 @@
 			<br>
 			<div class="box-element">
 				<div class="cart-row">
-					<div style="flex:2"></div>
+					<div style="flex:2"><strong>Product</strong></div>
 					<div style="flex:2"><strong>Item</strong></div>
 					<div style="flex:1"><strong>Price</strong></div>
 					<div style="flex:1"><strong>Quantity</strong></div>
 					<div style="flex:1"><strong>Total</strong></div>
+					<div style="flex:1"></div>
 				</div>
 			{% for item in object_list %}
-				<div class="cart-row">
+				<div class="cart-row d-flex justify-content-center">
 					<div style="flex:2"><img class="row-image" src="{{item.product.image.url}}"></div>
 					<div style="flex:2"><p>{{item.product.name}}</p></div>
 					{% if item.product.discount_price %}
@@ -50,7 +51,11 @@
 						</div>
 					</div>
 					<div style="flex:1"><p>GH<span>&#8373</span>{{item.total|floatformat:2}}</p></div>
-					<img data-product="{{item.product.id}}" data-action="clear" class="chg-quantity update-cart fas fa-trash" style="height: 25px; width:25px;" src="{% static 'images/trash.png' %}">
+					<div style="flex:1">
+					<i data-product="{{item.product.id}}" data-action="clear" class="chg-quantity update-cart fas fa-trash-alt ml-5 mb-4" style="height: 20px; width:20px; color: #DC3545"></i>
+					</div>
+<!--					<img data-product="{{item.product.id}}" data-action="clear" class="chg-quantity update-cart fas fa-trash-alt" style="height: 20px; width:20px; color: #DC3545">-->
+<!--					<i data-product="{{item.product.id}}" data-action="clear" class="chg-quantity update-cart fas fa-trash-alt" style="height: 20px; width:20px; color: #DC3545"></i>-->
 				</div>
 			{% endfor %}
 			</div>

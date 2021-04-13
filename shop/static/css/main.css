@@ -51,20 +51,19 @@ h1,h2,h3,h4,h5,h6 {
 	display: block;
 	text-align: center;
 	color:#fff;
-	background-color: red;
-	width: 20px;
+	background-color: #DC3545;
+	width: 25px;
 	height: 25px;
 	border-radius: 50%;
 	font-size: 14px;
+	padding: 1px;
 }
 
 .col-lg-4, .col-lg-6, .col-lg-8, .col-lg-12{
 	margin-top: 10px;
 }
 
-.btn{
-	border-radius: 0;
-}
+
 
 .row-image{
 	width: 100px;
@@ -78,10 +77,12 @@ h1,h2,h3,h4,h5,h6 {
 
 .cart-row{
 	display: flex;
-    align-items: flex-stretch;
+    align-items: center;
     padding-bottom: 10px;
     margin-bottom: 10px;
     border-bottom: 1px solid #ececec;
+    text-align: center;
+
 
 }
 
@@ -124,46 +125,75 @@ footer {
 /* MY CSS */
 /* Register */
         #register_form {
-            width: 50%;
-            margin: 100px auto;
-            border: 1px solid var(--accent);
+            width: 60%;
+            margin: 50px auto;
+            border: 1px solid #1d2124;
             padding: 20px;
+            font-size: 14px;
         }
 
-        #register_form .leg {
-            color: var(--primary);
-            font-size: 50px;
+        #register_form input {
+            width: 100%;
+        }
+
+        #register_form label {
+            font-size: 18px;
+        }
+
+        .leg {
+            font-size: 32px;
             font-weight: bold;
             margin-bottom: 30px;
             text-align: center;
         }
 
         #register_form p {
-            color: var(--secondary);
-            font-size: 20px;
+            font-size: 12px;
         }
 
-        #register_form .forms {
-            color: var(--secondary);
+        .sign {
+            color: #000;
+            font-size: 14px;
         }
 
-        #register_form .reg-footer {
-            margin-top: 20px;
-            color: var(--secondary);
+        .sign:hover {
+            color: #DC3545;
         }
 
-        #register_form .sign {
-            color: rgba(64, 224, 208, 0.8);
-        }
+
 
         #logout_form {
             width: 50%;
             margin: 100px auto;
-            border: 1px solid var(--accent);
+            border: 1px solid #1d2124;
             padding: 20px;
-            color: var(--accent);
         }
 
+
+        #login {
+            width: 50%;
+            margin: 50px auto;
+            border: 1px solid #1d2124;
+            padding: 20px;
+        }
+
+        #login p {
+            font-size: 12px;
+        }
+
+        #login input {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #login label {
+            font-size: 18px;
+
+        }
+
+        .reg-footer {
+            font-size: 16px;
+        }
 
 /* Product Card */
         .product-card {
@@ -281,12 +311,11 @@ footer {
             left: -15px;
             top: 20px;
             padding: 10px;
-            background-color: rgba(226, 0, 0,.85);
+            background-color: rgba(220, 53, 69, .9);
             border-radius: 15px;
             width: 60px;
             text-align: right;
             box-shadow: #e2004b 0px 7px 30px -10px;
-            opacity: 0.85;
         }
         .card h3 {
             color: white;
@@ -314,5 +343,4 @@ footer {
 
         .card .con-price {
             font-size: 16px;
-            margin-bottom: 50%;
         }

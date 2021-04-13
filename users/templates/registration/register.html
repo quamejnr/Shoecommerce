@@ -1,7 +1,7 @@
 {%extends 'shop/base.html'%}
 {% load crispy_forms_tags %}
 {%block content%}
-   <div id="">
+   <div id="register_form">
        <form method="POST">
            {% csrf_token %}
            <fieldset>
@@ -11,8 +11,8 @@
                </div>
            </fieldset>
            <div>
-               <button class="btn btn-info" type="submit">Sign Up</button>
-               <small><a class="ml-4 sign" href="{% url 'login' %}">Log In</a></small>
+               <button class="btn btn-danger" type="submit">Sign Up</button>
+               <small><a class="ml-4 mt-1 sign" href="{% url 'login' %}">Log In</a></small>
 <!--               <div class="reg-footer">-->
 <!--                   <small>-->
 <!--                       Need an account? <a class="ml-3 sign" href="">Sign Up</a>-->

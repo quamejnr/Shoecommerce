@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'shop.apps.ShopConfig',
     'users.apps.UsersConfig',
     'crispy_forms',
+    'fontawesome-free',
     'django_countries',
     'django.contrib.admin',
     'django.contrib.auth',

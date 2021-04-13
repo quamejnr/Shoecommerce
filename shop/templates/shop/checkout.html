@@ -116,7 +116,7 @@
 						</div>
 					  {% endfor %}
 					</div>
-				  <button type="submit" class="btn btn-primary mt-3">Make Payment</button>
+				  <button type="submit" class="btn btn-danger mt-3">Make Payment</button>
 
 				</div>
 			</form>
@@ -135,14 +135,14 @@
 				<hr>
 				{% for item in items %}
 					<div class="cart-row">
-						<div style="flex:2"><img class="row-image" src="{{item.product.image.url}}"></div>
-						<div style="flex:2"><p>{{item.product.name}}</p></div>
+						<div style="flex:1"><img class="row-image" src="{{item.product.image.url}}"></div>
+						<div style="flex:1"><p>{{item.product.name}}</p></div>
 						{% if item.product.discount_price %}
-							<div style="flex:2"><p>GH<span>&#8373</span>{{item.product.discount_price|floatformat:2}}</p></div>
+							<div style="flex:2"><p>({{item.quantity}}) x GH<span>&#8373</span>{{item.product.discount_price|floatformat:2}}</p></div>
 						{% else %}
-							<div style="flex:2"><p>GH<span>&#8373</span>{{item.product.price|floatformat:2}}</p></div>
+							<div style="flex:2"><p>({{item.quantity}}) x GH<span>&#8373</span>{{item.product.price|floatformat:2}}</p></div>
 						{% endif %}
-						<div style="flex:1"><p>{{item.quantity}}</p></div>
+						<div style="flex:1"><p>GH<span>&#8373</span>{{item.total|floatformat:2}}</p></div>
 					</div>
 				{% endfor %}
 				<div class="d-flex justify-content-between">
@@ -168,7 +168,7 @@
 							{{c_form.code}}
 							<br>
 							<div>
-								<button type="submit" class="btn btn-primary">Redeem</button>
+								<button style="border-radius: 0;" type="submit" class="btn btn-danger">Redeem</button>
 							</div>
 						</div>
 					</form>
