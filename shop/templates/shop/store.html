@@ -4,7 +4,6 @@
 	<article class="content">
         <div class="con-cards">
 			{% for product in object_list %}
-
 				<div class="card">
 					<a href="{{product.get_absolute_url}}">
 						{%if product.discount_price%}

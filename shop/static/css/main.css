@@ -160,15 +160,12 @@ footer {
             color: #DC3545;
         }
 
-
-
         #logout_form {
             width: 50%;
             margin: 100px auto;
             border: 1px solid #1d2124;
             padding: 20px;
         }
-
 
         #login {
             width: 50%;
@@ -218,11 +215,13 @@ footer {
             align-self: center;
             transform: rotate(-30deg);
         }
+
         .product-card-content {
             width: 55%;
             padding: 1rem 2rem 1rem 1rem;
 
         }
+
         .product-card-title {
             font-weight: 300;
             font-size: 3rem;
@@ -230,6 +229,7 @@ footer {
             margin: 1.5rem 0;
 
         }
+
         .product-card-text {
             color: #444;
             line-height: 1.4;
@@ -241,6 +241,7 @@ footer {
             font-weight: 600;
             color: #545b62;
         }
+
         .product-card-button {
             margin: 1.5rem 0 0;
             border: none;
@@ -251,7 +252,6 @@ footer {
             color: #fff;
             font-size: 1rem;
             font-weight: 500;
-
         }
 
         .product-card-button:hover {
@@ -263,7 +263,6 @@ footer {
             font-family: 'Oswald', sans-serif;
             width: 100%;
             margin: 50px auto;
-
         }
 
         .con-cards {
@@ -274,7 +273,7 @@ footer {
             padding: 50px 0px 0px 0px; */
 
             display: grid;
-            grid-gap: 15px;
+            grid-gap: 30px;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 
         }
@@ -284,11 +283,10 @@ footer {
             color: black;
         }
 
-
         .card {
             width: 100%;
             max-width: 300px;
-            min-height: 400px;
+            min-height: 450px;
             position: relative;
             z-index: 10;
             border: none;
@@ -317,6 +315,7 @@ footer {
             text-align: right;
             box-shadow: #e2004b 0px 7px 30px -10px;
         }
+
         .card h3 {
             color: white;
             font-size: 14px;
