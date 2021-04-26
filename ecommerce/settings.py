@@ -26,7 +26,7 @@ SECRET_KEY = '0f$ah!*f--_@g+-rqqn83vgj+*y(c+tr&+&w%#y(zrte6slyt('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://shoemall.herokuapp.com/']
 
 
 # Application definition
