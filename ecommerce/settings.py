@@ -32,7 +32,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '0f$ah!*f--_@g+-rqqn83vgj+*y(c+tr&+&w%#y(zrte6slyt('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', default=False)
+DEBUG = True
 
 ALLOWED_HOSTS = ['shoemall.herokuapp.com']
 
