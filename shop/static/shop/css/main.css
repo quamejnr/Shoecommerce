@@ -338,6 +338,8 @@ footer {
         .card .con-text {
             padding: 20px;
             height: 50px;
+            position: relative;
+            top: -25px;
         }
 
         .card .con-price {
