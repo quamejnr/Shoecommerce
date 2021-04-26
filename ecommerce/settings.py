@@ -142,7 +142,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/shoecommerce/'
 
 # Stripe
-STRIPE_SECRET_KEY = env('SECRET_KEY')
+STRIPE_SECRET_KEY = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
 
 # Testing mail
 EMAIL_HOST = "localhost"
@@ -153,9 +153,9 @@ django_heroku.settings(locals())
 
 # Cloudinary
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': env('CLOUDINARY_API_KEY'),
-    'API_SECRET': env('CLOUDINARY_API_SECRET')
+    'CLOUD_NAME': "quamejnr",
+    'API_KEY': '554587653573177',
+    'API_SECRET': "CBWkMLZGz_-U8uVkMJhyWr_NMxk"
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
