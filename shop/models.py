@@ -30,17 +30,17 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('product', kwargs={'slug': self.slug})
 
-    def save(self, *args, **kwargs):
-        # resizing images before saving
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # resizing images before saving
+    #     super().save(*args, **kwargs)
+    #
+    #     with Image.open(self.image.path) as img:
+    #         if (img.height or img.width) > 1000:
+    #             output_size = (800, 800)
+    #             img.thumbnail(output_size)
+    #             img.save(self.image.path)
 
-        with Image.open(self.image.path) as img:
-            if (img.height or img.width) > 1000:
-                output_size = (800, 800)
-                img.thumbnail(output_size)
-                img.save(self.image.path)
 
-    # TODO: Write code for discount price percentage
 
     @property
     def discount(self):
