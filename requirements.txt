@@ -1,12 +1,15 @@
 asgiref==3.3.1
 certifi==2020.12.5
 chardet==4.0.0
+cloudinary==1.25.0
 dj-database-url==0.5.0
 Django==3.1.4
 django-autoslug==1.9.8
+django-cloudinary-storage==0.3.0
 django-countries==7.0
 django-crispy==1.8.1
 django-crispy-forms==1.10.0
+django-environ==0.4.5
 django-heroku==0.3.1
 fontawesome-free==5.15.3
 future==0.18.2
