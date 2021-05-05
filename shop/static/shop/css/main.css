@@ -268,7 +268,7 @@ footer {
 
             display: grid;
             grid-gap: 30px;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 
         }
 
@@ -290,6 +290,7 @@ footer {
                          -5px -5px 10px #ffffff;
             box-shadow: 0 0.2rem 1rem -1.4rem rgba(0,0,0,0.5);
             overflow: hidden;
+            margin: auto;
 
         }
 
@@ -338,4 +339,23 @@ footer {
 
         .card .con-price {
             font-size: 16px;
+        }
+
+
+/* Responsive layouts */
+        @media (max-width: 850px) {
+            .card img {
+
+            }
+
+            .card h2 {
+                font-size: 16px;
+            }
+
+            .card .con-price {
+                font-size: 14px;
+            }
+
+
+
         }

@@ -29,10 +29,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '0f$ah!*f--_@g+-rqqn83vgj+*y(c+tr&+&w%#y(zrte6slyt('
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = ['shoemall.herokuapp.com']
 
@@ -153,9 +153,9 @@ django_heroku.settings(locals())
 
 # Cloudinary
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': "quamejnr",
-    'API_KEY': '554587653573177',
-    'API_SECRET': "CBWkMLZGz_-U8uVkMJhyWr_NMxk"
+    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': env("CLOUDINARY_API_KEY"),
+    'API_SECRET': env("CLOUDINARY_API_SECRET")
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

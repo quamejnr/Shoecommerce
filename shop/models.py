@@ -3,6 +3,7 @@ from django.db.models import F
 from PIL import Image
 from autoslug import AutoSlugField
 from django.contrib.auth.models import User
+from django.utils import timezone
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
 
