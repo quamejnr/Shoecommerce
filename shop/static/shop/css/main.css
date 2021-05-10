@@ -386,4 +386,13 @@ footer {
                 width: 100%;
             }
 
+            .row-image{
+                width: 80px;
+            }
+
+            .checkout {
+                display: flex;
+                flex-direction: column-reverse;
+            }
+
         }
