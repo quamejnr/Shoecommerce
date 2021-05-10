@@ -343,7 +343,7 @@ footer {
 
 
 /* Responsive layouts */
-        @media (max-width: 850px) {
+        @media (max-width: 768px) {
 
             .con-cards {
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -385,5 +385,8 @@ footer {
                 font-size: 12px;
             }
 
+            #login, #register_form {
+                width: 100%;
+            }
 
         }
