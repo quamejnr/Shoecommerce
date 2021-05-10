@@ -355,7 +355,8 @@ footer {
             }
 
             .card img {
-
+                width: 100%;
+                height: auto;
             }
 
             .card h2 {
