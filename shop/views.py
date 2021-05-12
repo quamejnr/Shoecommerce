@@ -114,7 +114,7 @@ class CheckoutView(LoginRequiredMixin, View):
 
             payment_choices = {
                 'S': 'stripe',
-                'p': 'paypal',
+                # 'p': 'paypal',
             }
 
             order = Order.objects.get(customer=self.request.user.customer, complete=False)

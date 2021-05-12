@@ -6,7 +6,7 @@ from .models import Customer
 
 PAYMENT_CHOICES = (
     ('S', 'stripe'),
-    ('P', 'paypal'),
+    # ('P', 'paypal'),
 
 )
 

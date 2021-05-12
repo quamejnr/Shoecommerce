@@ -4,7 +4,6 @@
 	<style>
 
 		#stripeBtnLabel {
-		  font-family: "Helvetica Neue", Helvetica, sans-serif;
 		  font-size: 16px;
 		  font-variant: normal;
 		  padding: 0;
@@ -157,15 +156,15 @@
 						<div style="flex:2"><img class="row-image" src="{{item.product.image.url}}"></div>
 						<div style="flex:2"><p>{{item.product.name}}</p></div>
 						{% if item.product.discount_price %}
-							<div style="flex:2"><p>GH<span>&#8373</span>{{item.product.discount_price|floatformat}}</p></div>
+							<div style="flex:2"><p>GH<span>&#8373</span>{{item.product.discount_price|floatformat:2}}</p></div>
 						{% else %}
 							<div style="flex:2"><p>GH<span>&#8373</span>{{item.product.price|floatformat:2}}</p></div>
 						{% endif %}
 						<div style="flex:1"><p>{{item.quantity}}</p></div>
 					</div>
 				{% endfor %}
-				<h5>Items: {{order.cart_items}}</h5>
-				<h5>Total: Gh<span>&#8373</span>{{order.cart_total}}</h5>
+				<h5><span class="text-muted">Items:</span> {{order.cart_items}}</h5>
+				<h5><span class="text-muted">Total:</span> Gh<span>&#8373</span>{{order.cart_total|floatformat:2}}</h5>
 			</div>
 		</div>
 	</div>

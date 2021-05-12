@@ -143,8 +143,8 @@
 				{% endfor %}
 				<div class="d-flex justify-content-between">
 					<div>
-						<h5>Items: {{order.cart_items}}</h5>
-						<h5>Total: Gh<span>&#8373</span>{{order.cart_total|floatformat:2}}</h5>
+						<h5><span class="text-muted">Items:</span> {{order.cart_items}}</h5>
+						<h5><span class="text-muted">Total:</span> Gh<span>&#8373</span>{{order.cart_total|floatformat:2}}</h5>
 					</div>
 					{% if order.coupon %}
 						<div class="mr-4" style="color: green;">

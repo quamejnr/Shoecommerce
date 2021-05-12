@@ -4,25 +4,17 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="box-element">
-
 				<a  class="btn btn-outline-dark" href="{% url 'store' %}">&#x2190; Continue Shopping</a>
-
 				<br>
 				<br>
 				<table class="table">
 					<tr>
-						<th><h5>Items: <strong>{{order.cart_items}}</strong></h5></th>
-						<th><h5>Total: <strong>Gh<span>&#8373</span>{{order.cart_total|floatformat:2}}</strong></h5></th>
-						<th>
-							<a style="float:right; margin:5px;" class="btn btn-danger" href="{% url 'checkout' %}">
-								Checkout
-							</a>
-						</th>
+						<th><h5><span class="text-muted">Items:</span> {{order.cart_items}}</h5></th>
+						<th><h5><span class="text-muted">Total:</span> Gh<span>&#8373</span>{{order.cart_total|floatformat:2}}</h5></th>
+						<th><a style="float:right; margin:5px;" class="btn btn-danger" href="{% url 'checkout' %}">Checkout</a></th>
 					</tr>
 				</table>
-
 			</div>
-
 			<br>
 			<div class="box-element">
 				<div class="cart-row">
@@ -52,7 +44,9 @@
 					</div>
 					<div style="flex:1"><p>GH<span>&#8373</span>{{item.total|floatformat:2}}</p></div>
 					<div style="flex:1">
-					<i data-product="{{item.product.id}}" data-action="clear" class="chg-quantity update-cart fas fa-trash-alt mb-4" style="height: 20px; width:20px; color: #DC3545"></i>
+<!--					<i data-product="{{item.product.id}}" data-action="clear" class="chg-quantity update-cart fas fa-trash-alt mb-4" style="height: 20px; width:20px; color: #DC3545"></i>-->
+					<a data-product="{{item.product.id}}" data-action="clear" class="chg-quantity update-cart" href=""><i class="fas fa-trash-alt mb-4" style="height: 20px; width: 20px; color: #DC3545"></i></a>
+
 					</div>
 <!--					<img data-product="{{item.product.id}}" data-action="clear" class="chg-quantity update-cart fas fa-trash-alt" style="height: 20px; width:20px; color: #DC3545">-->
 <!--					<i data-product="{{item.product.id}}" data-action="clear" class="chg-quantity update-cart fas fa-trash-alt" style="height: 20px; width:20px; color: #DC3545"></i>-->
