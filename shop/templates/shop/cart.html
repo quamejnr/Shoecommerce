@@ -27,7 +27,7 @@
 			<div class="box-element">
 				<div class="cart-row">
 					<div style="flex:2"><strong>Product</strong></div>
-					<div style="flex:2"><strong>Item</strong></div>
+					<div class="item-name" style="flex:2"><strong>Item</strong></div>
 					<div style="flex:1"><strong>Price</strong></div>
 					<div style="flex:1"><strong>Quantity</strong></div>
 					<div style="flex:1"><strong>Total</strong></div>
@@ -36,23 +36,23 @@
 			{% for item in object_list %}
 				<div class="cart-row d-flex justify-content-center">
 					<div style="flex:2"><img class="row-image" src="{{item.product.image.url}}"></div>
-					<div style="flex:2"><p>{{item.product.name}}</p></div>
+					<div class="item-name" style="flex:2"><p>{{item.product.name}}</p></div>
 					{% if item.product.discount_price %}
 						<div style="flex:1"><p>GH<span>&#8373</span>{{item.product.discount_price|floatformat:2}}</p></div>
 					{% else %}
 						<div style="flex:1"><p>GH<span>&#8373</span>{{item.product.price|floatformat:2}}</p></div>
 					{% endif %}
 					<div style="flex:1">
-						<p class="quantity">{{item.quantity}}</p>
+
 						<div class="quantity">
 							<img data-product="{{item.product.id}}" data-action="add" class="chg-quantity update-cart" src="{% static  'shop/images/arrow-up.png' %}">
-							<br>
+							<p class="quantity mt-1 mb-1">{{item.quantity}}</p>
 							<img data-product="{{item.product.id}}" data-action="remove" class="chg-quantity update-cart" src="{% static  'shop/images/arrow-down.png' %}">
 						</div>
 					</div>
 					<div style="flex:1"><p>GH<span>&#8373</span>{{item.total|floatformat:2}}</p></div>
 					<div style="flex:1">
-					<i data-product="{{item.product.id}}" data-action="clear" class="chg-quantity update-cart fas fa-trash-alt ml-5 mb-4" style="height: 20px; width:20px; color: #DC3545"></i>
+					<i data-product="{{item.product.id}}" data-action="clear" class="chg-quantity update-cart fas fa-trash-alt mb-4" style="height: 20px; width:20px; color: #DC3545"></i>
 					</div>
 <!--					<img data-product="{{item.product.id}}" data-action="clear" class="chg-quantity update-cart fas fa-trash-alt" style="height: 20px; width:20px; color: #DC3545">-->
 <!--					<i data-product="{{item.product.id}}" data-action="clear" class="chg-quantity update-cart fas fa-trash-alt" style="height: 20px; width:20px; color: #DC3545"></i>-->
