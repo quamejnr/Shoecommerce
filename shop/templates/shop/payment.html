@@ -34,7 +34,7 @@
 		  transition: all 150ms ease;
 		  float: left;
 		  margin-left: 12px;
-		  margin-top: 28px;
+		  margin-top: 25px;
 		}
 
 		button:hover {
@@ -56,7 +56,7 @@
 		}
 
 		#card-errors {
-		  height: 20px;
+		  height: 30px;
 		  padding: 4px 0;
 		  color: #fa755a;
 		}
@@ -98,14 +98,24 @@
 		  background-color: #fefde5 !important;
 		}
 
-		@media (max-width: 768px) {
+		@media (max-width: 750px) {
+
+			#stripeBtnLabel, #card-element{
+				margin-bottom: 10px;
+			}
+
+			.stripe-form-row {
+				width: 100%;
+			}
+
 			#stripeBtn {
 					margin: 0px;
 				}
 
-				#stripe-form {
-					padding: 0px;
-				}
+			#stripe-form {
+				padding: 0px;
+				height: 160px;
+			}
 		}
 
 	</style>
