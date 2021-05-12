@@ -398,7 +398,7 @@ footer {
                 width: 80px;
             }
 
-            .checkout {
+            .checkout, .payment {
                 display: flex;
                 flex-direction: column-reverse;
             }
@@ -410,5 +410,6 @@ footer {
             .item-name {
                 display: none;
             }
+
 
         }

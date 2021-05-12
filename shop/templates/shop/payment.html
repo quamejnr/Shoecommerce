@@ -98,11 +98,21 @@
 		  background-color: #fefde5 !important;
 		}
 
+		@media (max-width: 768px) {
+			#stripeBtn {
+					margin: 0px;
+				}
+
+				#stripe-form {
+					padding: 0px;
+				}
+		}
+
 	</style>
 {% endblock extra_head%}
 
 {% block content %}
-     <div class="row">
+     <div class="row payment">
 		<div class="col-lg-12">
 			<div class="box-element" id="form-wrapper">
 				<div class="wrapper">
