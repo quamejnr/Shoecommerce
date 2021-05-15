@@ -40,7 +40,8 @@ class CartView(ListView):
             # Assigning cart items to an empty list if customer is not logged in.
             cart_items = []
             return cart_items
-        # TODO: Rewrite code so order is only created when an item is added to cart
+        # TODO: Rewrite code so order is only created when an item is added to cart and add guest functionality so
+        # TODO: guest can add items to cart without logging in.
 
     def get_context_data(self, **kwargs):
         # Adding order to the context
